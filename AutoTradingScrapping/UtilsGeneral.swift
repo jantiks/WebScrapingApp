@@ -5,9 +5,9 @@
 //  Created by Tigran on 3/10/21.
 //
 
-import UIKit
+import Foundation
 
-class UtilsGeneral: NSObject {
+class UtilsGeneral {
     
     // storyboard id's
     static let SBID_BrandsVC = "Brands"

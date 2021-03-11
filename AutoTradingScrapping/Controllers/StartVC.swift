@@ -19,7 +19,8 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         // setting tableView delegate and data source
         tableView.delegate = self
         tableView.dataSource = self
-        
+        let parser = Parser()
+        parser.parseData()
         setupUI()
     }
     
