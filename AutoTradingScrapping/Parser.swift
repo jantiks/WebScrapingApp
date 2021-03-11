@@ -26,21 +26,47 @@ class Parser {
                 
                 guard let innerHTML = doc?.innerHTML else { return } // making string from html
                 let htmlBody = try SwiftSoup.parse((innerHTML)) // parsing html string
-                let cardElements = try htmlBody.getElementsByClass("item-card-content") //
+                let cardElements = try htmlBody.getElementsByClass("item-card-content") // getting all html from car listing
                 
-                
-                print("this is title elements \(cardElements.array())")
-                var count = 0
+                // getting title , phone number , price from html
                 for element in cardElements {
+                    let title = try element.getElementsByTag("h2").text() // the title
+                    let phoneNumber = self.getPhoneNumber(element)
+                    let price = try element.getElementsByClass("first-price").text()
                     
-                    count += 1
-                    print("the count is \(count)")
-                    print(element)
+                    
+                    
                 }
             } catch  {
                 print(error.localizedDescription)
             }
         }
         
+    }
+    
+    private func getPhoneNumber(_ element: SwiftSoup.Element) -> String {
+        /*
+         returnes phone number
+         */
+        
+        var phoneNumber = ""
+        do {
+            let footer = try element.getElementsByClass("listing-footer")
+            for elem in footer {
+                phoneNumber = try elem.getElementsByClass("display-block").select("span").first()?.text() as! String
+            }
+            
+        } catch {
+            print("Couldn't load phone number")
+        }
+        return phoneNumber
+    }
+    
+    private func getPrice(_ element: SwiftSoup.Element) -> String {
+        /*
+         returnes the price of car from html
+         */
+        var price = ""
+        return price
     }
 }

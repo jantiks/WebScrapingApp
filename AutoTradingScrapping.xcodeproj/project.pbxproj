@@ -17,6 +17,7 @@
 		9896220325F90C20006EC3F2 /* ResultsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9896220225F90C20006EC3F2 /* ResultsVC.swift */; };
 		9896220625F90E8D006EC3F2 /* ModelsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9896220525F90E8D006EC3F2 /* ModelsVC.swift */; };
 		9896220D25F9117A006EC3F2 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9896220C25F9117A006EC3F2 /* Parser.swift */; };
+		98BCB6E225FA6EEB0035B6F5 /* Car.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BCB6E125FA6EEB0035B6F5 /* Car.swift */; };
 		98CF2C7125F8E83700C04D65 /* StartVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CF2C7025F8E83700C04D65 /* StartVC.swift */; };
 		98CF2C7425F8EB1E00C04D65 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CF2C7325F8EB1E00C04D65 /* Extensions.swift */; };
 		B91FB9E982CBCC4447F35FF7 /* Pods_AutoTradingScrapping.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 425DE04707D239963DB62CA7 /* Pods_AutoTradingScrapping.framework */; };
@@ -37,6 +38,7 @@
 		9896220225F90C20006EC3F2 /* ResultsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsVC.swift; sourceTree = "<group>"; };
 		9896220525F90E8D006EC3F2 /* ModelsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelsVC.swift; sourceTree = "<group>"; };
 		9896220C25F9117A006EC3F2 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
+		98BCB6E125FA6EEB0035B6F5 /* Car.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Car.swift; sourceTree = "<group>"; };
 		98CF2C7025F8E83700C04D65 /* StartVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartVC.swift; sourceTree = "<group>"; };
 		98CF2C7325F8EB1E00C04D65 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		C8C575599F859FF4F43EFC83 /* Pods-AutoTradingScrapping.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AutoTradingScrapping.release.xcconfig"; path = "Target Support Files/Pods-AutoTradingScrapping/Pods-AutoTradingScrapping.release.xcconfig"; sourceTree = "<group>"; };
@@ -118,9 +120,10 @@
 		98867EE125F7EC2B00A447B1 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				98BCB6E025FA6ED20035B6F5 /* DataModel */,
 				989621FC25F90979006EC3F2 /* Extensions */,
 				989621FD25F90982006EC3F2 /* Utils */,
-				9896220C25F9117A006EC3F2 /* Parser.swift */,
+				98BCB6DE25FA6EBC0035B6F5 /* Parser */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -146,6 +149,22 @@
 				989621F825F90280006EC3F2 /* UtilsGeneral.swift */,
 			);
 			name = Utils;
+			sourceTree = "<group>";
+		};
+		98BCB6DE25FA6EBC0035B6F5 /* Parser */ = {
+			isa = PBXGroup;
+			children = (
+				9896220C25F9117A006EC3F2 /* Parser.swift */,
+			);
+			name = Parser;
+			sourceTree = "<group>";
+		};
+		98BCB6E025FA6ED20035B6F5 /* DataModel */ = {
+			isa = PBXGroup;
+			children = (
+				98BCB6E125FA6EEB0035B6F5 /* Car.swift */,
+			);
+			name = DataModel;
 			sourceTree = "<group>";
 		};
 		B90041859794C369CB03B0E2 /* Pods */ = {
@@ -273,6 +292,7 @@
 			files = (
 				9896220325F90C20006EC3F2 /* ResultsVC.swift in Sources */,
 				98867EC925F7EBD600A447B1 /* AppDelegate.swift in Sources */,
+				98BCB6E225FA6EEB0035B6F5 /* Car.swift in Sources */,
 				98867ECB25F7EBD600A447B1 /* SceneDelegate.swift in Sources */,
 				9896220025F90A6D006EC3F2 /* BrandsVC.swift in Sources */,
 				989621F925F90280006EC3F2 /* UtilsGeneral.swift in Sources */,
