@@ -20,7 +20,6 @@ class ModelsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
-        print(brandValue)
     }
     
     

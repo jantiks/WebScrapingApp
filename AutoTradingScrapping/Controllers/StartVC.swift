@@ -24,8 +24,8 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         tableView.dataSource = self
         
         // parsing the data
-//        var parser = Parser(brand: "Toyota", model: "Camry")
-//        parser.makeBrands()
+        var parser = Parser(brand: "Toyota", model: "Camry")
+        parser.makeBrands()
 //        parser.parseData { [weak self] result in
 //            switch result {
 //            case .success(let Cars):
