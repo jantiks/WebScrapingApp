@@ -7,8 +7,9 @@
 
 import UIKit
 
-class ResultsVC: UIViewController {
-
+class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    @IBOutlet weak var tableView: UITableView!
+    
     // instance variables
     var brandValue = ""
     var modelValue = ""
@@ -31,7 +32,31 @@ class ResultsVC: UIViewController {
 
     }
     
+    //MARK: UITableViewDataSource methods
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return Cars.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") else { fatalError("couldn't load the cell") }
+        
+        let car = Cars[indexPath.row]
+        
+        cell.textLabel?.text = car.title
+        cell.textLabel?.font = cell.textLabel?.font.withSize(12)
+        cell.detailTextLabel?.text = "phone number - \(car.phoneNumber)   price - \(car.price)$"
+        
+        return cell
+    }
+    
+    
+    
     private func parseData() {
+        /*
+         this function parses data from the autotrade.com , adds loading view while the app is parsing
+         the data and removes it when the parsing is done.
+         */
+        
         
         // making the load view
         let loadView = UIView()
@@ -41,7 +66,7 @@ class ResultsVC: UIViewController {
         
         
         loadView.frame = CGRect(x: (self.view.bounds.width / 2) - 60, y: (self.view.frame.height / 2) - 30, width: 120, height: 80)
-        loadView.backgroundColor = .white
+        loadView.backgroundColor = .systemGray6
         loadView.layer.cornerRadius = 10
         
         let spiner = SpinnerView(frame: CGRect(x: 40, y: 10, width: 40, height: 40)) // custom spinner
@@ -57,8 +82,12 @@ class ResultsVC: UIViewController {
             switch result {
             case .success(let Cars):
                 self?.Cars = Cars
+                
+                // removing loading view from superview when the parsing is done
                 loadView.removeFromSuperview()
-                print(self?.Cars)
+                
+                self?.tableView.reloadData()
+                
             case .failure(let error):
                 print(error.localizedDescription)
             }

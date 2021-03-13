@@ -116,11 +116,22 @@ class UtilsGeneral {
                           ["label":"Kia","value":"KIA", "models":
                             // models
                             ["Stinger": "KIASTING", "Sedona": "SEDONA", "Sorento": "SORENTO", "Soul": "SOUL", "Telluride": "KIATELLURD", "Forte": "FORTE", "Sportage": "SPORTA", "Optima": "OPTIMA"] ],
-                          ["label":"Lamborghini","value":"LAM" ],
-                          ["label":"Land Rover","value":"ROV" ],
-                          ["label":"Lexus","value":"LEXUS" ],
-                          ["label":"Lincoln","value":"LINC" ],
-                          ["label":"Lotus","value":"LOTUS" ],
+                          ["label":"Lamborghini","value":"LAM", "models":
+                            // models
+                            ["Aventador": "AVENT", "Urus": "LAMURUS", "Murcielago": "MURCIELAGO", "Gallardo": "GALLARDO", "Huracan": "LAMHURACAN"]
+ ],
+                          ["label":"Land Rover","value":"ROV", "models":
+                            // models
+                            ["Defender": "DEFEND", "Discovery Sport": "ROVDISCSPT", "Range Rover": "RANGE", "LR4": "LR4", "Range Rover Evoque": "EVOQUE", "Range Rover Velar": "ROVVELAR", "Range Rover Sport": "RANGESPORT", "Discovery": "DISCOV"] ],
+                          ["label":"Lexus","value":"LEXUS", "models":
+                            // models
+                            ["GS Models": "GS_MODELS", "UX Models": "UX_MODELS", "GX 460": "GX460", "LX Models": "LX_MODELS", "IS 350": "IS350", "RC Models": "RC_MODELS", "ES Models": "ES_MODELS", "LX 570": "LX570", "GX Models": "GX_MODELS", "IS 250": "IS250", "RX 350": "RX350", "LC Models": "LC_MODELS", "GS 350": "GS350", "NX Models": "NX_MODELS", "RX Models": "RX_MODELS", "LS Models": "LS_MODELS", "SC Models": "SC_MODELS", "LS 460": "LS460", "ES 350": "ES350", "IS Models": "IS_MODELS"]],
+                          ["label":"Lincoln","value":"LINC", "models":
+                            // models
+                            ["Town Car": "LINCTC", "MKS": "MKS", "Navigator L": "NAVIGAL", "Continental": "CONT", "MKC": "LINCMKC", "MKZ": "MKZ", "Navigator": "NAVIGA", "MKX": "MKX"] ],
+                          ["label":"Lotus","value":"LOTUS", "models":
+                            // models
+                            ["Exige": "EXIGE", "Evora": "EVORA", "Elise": "LOTELISE"] ],
                           ["label":"Maserati","value":"MAS" ],
                           ["label":"Maybach","value":"MAYBACH" ],
                           ["label":"Mazda","value":"MAZDA" ],
