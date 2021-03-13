@@ -12,7 +12,7 @@ import UIKit
 // table view
 extension UITableView {
     func configureTableViewUI() {
-        self.separatorStyle = .none
+        self.separatorStyle = .singleLine
     }
 }
 

@@ -7,23 +7,57 @@
 
 import UIKit
 
-class ModelsVC: UIViewController {
-
+class ModelsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
+    //MARK: IBOutlets
+    @IBOutlet weak var tableView: UITableView!
+    
+    // instance variables
+    var models = [String:String]()
+    var brandValue = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        tableView.delegate = self
+        tableView.dataSource = self
+        print(brandValue)
+    }
+    
+    
+    //MARK: UITabelViewDataSource methods
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        /*
+          returns the number of rows in tableview section
+         */
+        
+        return models.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        /*
+         returnes specific cell for each tableview row
+         */
+        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") else { fatalError("couldn't load the cell") }
+        let keys = Array(models.keys).sorted() // getting keys of models dictionary
+        
+        cell.textLabel?.text = keys[indexPath.row]
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        /*
+         when user taps on tableview row , viewcontroller oppens the ResultsVC
+         */
+        let cell = tableView.cellForRow(at: indexPath)
+        guard let modelValue = models[cell?.textLabel?.text ?? ""] else { return }
+        guard let vc = storyboard?.instantiateViewController(withIdentifier: UtilsGeneral.SBID_ResultsVC) as? ResultsVC else { return }
+        vc.brandValue = brandValue
+        vc.modelValue = modelValue
+        navigationController?.pushViewController(vc, animated: true)
     }
     
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+    
 }

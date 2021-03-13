@@ -13,14 +13,28 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var addButton: UIButton!
     
+    // instance variables
+    var Cars = [Car]()
+        
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // setting tableView delegate and data source
         tableView.delegate = self
         tableView.dataSource = self
-        let parser = Parser()
-        parser.parseData()
+        
+        // parsing the data
+//        var parser = Parser(brand: "Toyota", model: "Camry")
+//        parser.makeBrands()
+//        parser.parseData { [weak self] result in
+//            switch result {
+//            case .success(let Cars):
+//                self?.Cars = Cars
+//            case .failure(let error):
+//                print(error.localizedDescription)
+//            }
+//        }
+        
         setupUI()
     }
     
@@ -39,7 +53,7 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         /*
           returns the number of rows in tableview section
          */
-        return 10
+        return Cars.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -49,6 +63,7 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") else { fatalError("couldn't load tableview cell") }
         cell.configureCellUI()
+        cell.textLabel?.text = Cars[indexPath.row].phoneNumber
         return cell
     }
     

@@ -9,10 +9,14 @@ import UIKit
 
 class ResultsVC: UIViewController {
 
+    // instance variables
+    var brandValue = ""
+    var modelValue = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        print(brandValue, modelValue)
     }
     
 
