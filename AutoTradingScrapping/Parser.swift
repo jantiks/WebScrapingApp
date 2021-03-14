@@ -14,8 +14,11 @@ struct Parser {
 
     init(brand: String, model: String) {
         
-        let resourceString = "https://www.autotrader.com/cars-for-sale/all-cars/ACURA/INTEG/dublin-oh-43016?lastExec=2021-03-11T13%3A59%3A23.898Z&dma=&searchRadius=500&location=&marketExtension=include&isNewSearch=false&showAccelerateBanner=false&sortBy=relevance&numRecords=100" // website addres
-        guard let resourceURL = URL(string: resourceString) else { fatalError() }
+        let resourceString = "https://www.autotrader.com/cars-for-sale/all-cars/\(brand)/\(model)/new-york-ny-10001?dma=&searchRadius=100&isNewSearch=false&marketExtension=include&showAccelerateBanner=false&sortBy=relevance&numRecords=100"
+        
+            
+        // website addres
+        guard let resourceURL = URL(string: resourceString) else { fatalError(resourceString) }
         
         self.resourceURL = resourceURL
         
@@ -25,7 +28,7 @@ struct Parser {
         let html = "<option value=\"PHANT\">Phantom</option><option value=\"WRAI\">Wraith</option><option value=\"GHOST\">Ghost</option><option value=\"RRCULLINAN\">Cullinan</option>"
         do {
             let innerHtml = try SwiftSoup.parse(html)
-            var justArray = try innerHtml.select("option").array()
+            let justArray = try innerHtml.select("option").array()
             var titleArray = [String]()
             for elem in justArray {
                 titleArray.append(try elem.text())
@@ -79,17 +82,19 @@ struct Parser {
                     let footer = try element.getElementsByClass("listing-footer")
                     var phoneNumber = "" // phone number
                     for elem in footer {
-                        phoneNumber = try elem.getElementsByClass("display-block").select("span").first()?.text() as! String
+                        if let phoneNumber = try elem.getElementsByClass("display-block").select("span").first()?.text() {
+                            // getting price
+                            let price = try element.getElementsByClass("first-price").text()
+                            if phoneNumber.isEmpty {
+                                continue
+                            } else {
+                                let car = Car(title: title, price: price, phoneNumber: phoneNumber)
+                                Cars.append(car)
+                            }
+                            
+                        }
                     }
                     
-                    // getting price
-                    let price = try element.getElementsByClass("first-price").text()
-                    if phoneNumber.isEmpty {
-                        continue
-                    } else {
-                        let car = Car(title: title, price: price, phoneNumber: phoneNumber)
-                        Cars.append(car)
-                    }
                     
                 }
                 completion(.success(Cars))

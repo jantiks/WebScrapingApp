@@ -21,10 +21,8 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         // Core Data Containter
         makeContainer()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -157,8 +155,12 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.view.addSubview(loadView)
         
         // parsing the data
+        let brand = getBrandValue(value: self.brandValue).lowercased()
+        let model = getBrandValue(value: self.modelValue).lowercased()
         
-        let parser = Parser(brand: self.brandValue, model: self.modelValue)
+        print(brand, model)
+        
+        let parser = Parser(brand: brand, model: model)
         parser.parseData { [unowned self] result in
             switch result {
             case .success(let Cars):
@@ -179,6 +181,23 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             // saving the data if it is changed
             self.saveContext()
         }
+    }
+    
+    private func getBrandValue(value: String) -> String {
+        /*
+         value: the brand name or model name of car
+         this method returnes configured value
+         */
+        
+        var newValue = value
+        if newValue.starts(with: "- ") {
+            newValue.removeFirst()
+            newValue.removeFirst()
+        }
+        
+        newValue = newValue.replacingOccurrences(of: " ", with: "-")
+        
+        return newValue
     }
 
     

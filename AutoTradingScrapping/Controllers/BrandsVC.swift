@@ -47,7 +47,7 @@ class BrandsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
          */
         
         let models = brands[indexPath.row]["models"] as! [String : String]
-        let brandValue = brands[indexPath.row]["value"] as! String
+        let brandValue = brands[indexPath.row]["label"] as! String
         
         guard let vc = storyboard?.instantiateViewController(withIdentifier: UtilsGeneral.SBID_ModelsVC) as? ModelsVC else { return }
         

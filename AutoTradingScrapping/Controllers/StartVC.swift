@@ -151,7 +151,7 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
          */
         
         let request: NSFetchRequest<SearchData> = SearchData.fetchRequest()
-        let sort = NSSortDescriptor(key: "brand", ascending: false)
+        let sort = NSSortDescriptor(key: "brand", ascending: true)
         
         request.sortDescriptors = [sort]
         

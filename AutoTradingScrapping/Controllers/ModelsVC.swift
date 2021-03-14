@@ -50,9 +50,10 @@ class ModelsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
          when user taps on tableview row , viewcontroller oppens the ResultsVC
          */
         let cell = tableView.cellForRow(at: indexPath)
-        guard let modelValue = models[cell?.textLabel?.text ?? ""] else { return }
+        guard let modelValue = cell?.textLabel?.text else { return }
         guard let vc = storyboard?.instantiateViewController(withIdentifier: UtilsGeneral.SBID_ResultsVC) as? ResultsVC else { return }
         vc.brandValue = brandValue
+        print("this is \(modelValue)")
         vc.modelValue = modelValue
         navigationController?.pushViewController(vc, animated: true)
     }

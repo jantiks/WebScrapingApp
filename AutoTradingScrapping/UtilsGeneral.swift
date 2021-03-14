@@ -176,11 +176,7 @@ class UtilsGeneral {
                          ["label":"Rolls-Royce","value":"RR", "models":
                             // models
                             ["Ghost": "GHOST", "Cullinan": "RRCULLINAN", "Wraith": "WRAI", "Phantom": "PHANT"]],
-                         ["label":"Saab","value":"SAAB" ],
                          ["label":"Saturn","value":"SATURN" ],
-                         ["label":"Scion","value":"SCION" ],
-                         ["label":"smart","value":"SMART" ],
-                         ["label":"SRT","value":"SRT" ],
                          ["label":"Subaru","value":"SUB" ],
                          ["label":"Suzuki","value":"SUZUKI" ],
                          ["label":"Tesla","value":"TESLA" ],
