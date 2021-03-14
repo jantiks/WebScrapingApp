@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -14,7 +15,8 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet private weak var addButton: UIButton!
     
     // instance variables
-    var Cars = [Car]()
+    private var container: NSPersistentContainer!
+    private var Cars = [SearchData]()
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,16 +28,16 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         // parsing the data
         var parser = Parser(brand: "Toyota", model: "Camry")
         parser.makeBrands()
-//        parser.parseData { [weak self] result in
-//            switch result {
-//            case .success(let Cars):
-//                self?.Cars = Cars
-//            case .failure(let error):
-//                print(error.localizedDescription)
-//            }
-//        }
+
         
         setupUI()
+        loadCarsData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        loadCarsData()
     }
     
     private func setupUI() {
@@ -44,7 +46,6 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
          */
         addButton.layer.cornerRadius = addButton.bounds.size.width / 2
         tableView.configureTableViewUI()
-        
     }
     
     
@@ -63,7 +64,8 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") else { fatalError("couldn't load tableview cell") }
         cell.configureCellUI()
-        cell.textLabel?.text = Cars[indexPath.row].phoneNumber
+        cell.textLabel?.text = Cars[indexPath.row].brand
+        cell.detailTextLabel?.text = Cars[indexPath.row].model
         return cell
     }
     
@@ -72,14 +74,57 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
          when user taps on tableview row , viewcontroller oppens the ResultsVC
          */
         guard let vc = storyboard?.instantiateViewController(withIdentifier: UtilsGeneral.SBID_ResultsVC) as? ResultsVC else { return }
+        vc.brandValue = Cars[indexPath.row].brand
+        vc.modelValue = Cars[indexPath.row].model
+        
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    
     // MARK: IBActions
-    @IBAction func addButtonTapped(_ sender: UIButton) {
+    @IBAction private func addButtonTapped(_ sender: UIButton) {
         guard let vc = storyboard?.instantiateViewController(withIdentifier: UtilsGeneral.SBID_BrandsVC) as? BrandsVC else { return }
         navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    //MARK: CoreData
+    private func loadCarsData() {
+        makeContainer()
+        loadSavedData()
+        
+        tableView.reloadData()
+    }
+    
+    private func makeContainer() {
+        /*
+         makes the NSPersistentContainer
+         */
+        
+        container = NSPersistentContainer(name: "Model")
+        container?.loadPersistentStores { storeDescription, error in
+            if let error = error {
+                print("Unresolved error \(error)")
+            }
+        }
+    }
+    
+    private func loadSavedData() {
+        /*
+         loads the data from Core Data NSPersistentStore
+         */
+        
+        let request: NSFetchRequest<SearchData> = SearchData.fetchRequest()
+        let sort = NSSortDescriptor(key: "brand", ascending: false)
+        
+        request.sortDescriptors = [sort]
+        
+        do {
+            Cars = try container.viewContext.fetch(request)
+            print("got \(Cars.count) datas")
+        } catch  {
+            print("error")
+        }
+        
+
     }
     
 }

@@ -6,18 +6,24 @@
 //
 
 import UIKit
+import CoreData
 
 class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var tableView: UITableView!
     
     // instance variables
+    var container: NSPersistentContainer!
+    
     var brandValue = ""
     var modelValue = ""
     private var Cars = [Car]()
+    private var SearchDatas = [SearchData]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Core Data Containter
+        makeContainer()
         
     }
     
@@ -31,6 +37,7 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         parseData()
 
     }
+    
     
     //MARK: UITableViewDataSource methods
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -49,8 +56,78 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+    //MARK: Core Data
+    
+    private func makeContainer() {
+        /*
+         makes the NSPersistentContainer
+         */
+        
+        container = NSPersistentContainer(name: "Model")
+        container.loadPersistentStores { storeDescription, error in
+            if let error = error {
+                print("Unresolved error \(error)")
+            }
+        }
+    }
     
     
+    private func saveContext() {
+        /*
+         this function saves the data to the disk
+         */
+        
+        if container.viewContext.hasChanges {
+            do {
+                try container.viewContext.save()
+            } catch  {
+                print("An error occurred while saving: \(error)")
+            }
+        }
+    }
+    
+    private func configure(searchData: SearchData) {
+        /*
+         this function saves the data to CoreData model
+         */
+        searchData.brand = brandValue
+        searchData.model = modelValue
+    }
+    
+    private func loadSavedData() {
+        /*
+         loads the data from Core Data NSPersistentStore
+         */
+        
+        let request: NSFetchRequest<SearchData> = SearchData.fetchRequest()
+        let sort = NSSortDescriptor(key: "brand", ascending: false)
+        
+        request.sortDescriptors = [sort]
+        
+        do {
+            SearchDatas = try container.viewContext.fetch(request)
+            print("got \(SearchDatas.count) datas")
+        } catch  {
+            print("error")
+        }
+        
+
+    }
+    
+    private func saveDataToContainer() {
+        loadSavedData()
+        for model in SearchDatas {
+            if model.brand == brandValue && model.model == modelValue {
+                return
+            }
+        }
+        
+        let searchData = SearchData(context: (self.container.viewContext))
+        self.configure(searchData: searchData)
+
+    }
+    
+    //MARK: Parsing the data
     private func parseData() {
         /*
          this function parses data from the autotrade.com , adds loading view while the app is parsing
@@ -78,19 +155,24 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         // parsing the data
         
         let parser = Parser(brand: self.brandValue, model: self.modelValue)
-        parser.parseData { [weak self] result in
+        parser.parseData { [unowned self] result in
             switch result {
             case .success(let Cars):
-                self?.Cars = Cars
+                self.Cars = Cars
                 
+                // saving data to Core Data model
+                saveDataToContainer()
                 // removing loading view from superview when the parsing is done
                 loadView.removeFromSuperview()
                 
-                self?.tableView.reloadData()
+                self.tableView.reloadData()
                 
             case .failure(let error):
                 print(error.localizedDescription)
             }
+            
+            // saving the data if it is changed
+            self.saveContext()
         }
     }
 
