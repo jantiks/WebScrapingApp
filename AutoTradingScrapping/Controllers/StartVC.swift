@@ -80,6 +80,29 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         navigationController?.pushViewController(vc, animated: true)
     }
     
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        /*
+         deletes the row from table view
+         */
+        
+        if editingStyle == .delete {
+            
+            // deleting the data from Core Data store
+            container.viewContext.delete(Cars[indexPath.row])
+            Cars.remove(at: indexPath.row)
+            
+            tableView.deleteRows(at: [indexPath], with: .automatic) // deleting row
+            
+            saveContext() // saving changes 
+            
+            
+        }
+    }
+    
     // MARK: IBActions
     @IBAction private func addButtonTapped(_ sender: UIButton) {
         guard let vc = storyboard?.instantiateViewController(withIdentifier: UtilsGeneral.SBID_BrandsVC) as? BrandsVC else { return }
@@ -87,6 +110,7 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     //MARK: CoreData
+    
     private func loadCarsData() {
         makeContainer()
         loadSavedData()
@@ -103,6 +127,20 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         container?.loadPersistentStores { storeDescription, error in
             if let error = error {
                 print("Unresolved error \(error)")
+            }
+        }
+    }
+    
+    private func saveContext() {
+        /*
+         this function saves the data to the disk
+         */
+        
+        if container.viewContext.hasChanges {
+            do {
+                try container.viewContext.save()
+            } catch  {
+                print("An error occurred while saving: \(error)")
             }
         }
     }
@@ -126,5 +164,7 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
 
     }
+    
+    
     
 }

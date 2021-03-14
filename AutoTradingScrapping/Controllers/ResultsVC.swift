@@ -115,6 +115,10 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     private func saveDataToContainer() {
+        /*
+         checks if existing database has the values , if not the method saves them
+         */
+        
         loadSavedData()
         for model in SearchDatas {
             if model.brand == brandValue && model.model == modelValue {
@@ -160,8 +164,9 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             case .success(let Cars):
                 self.Cars = Cars
                 
-                // saving data to Core Data model
+                // saving data to Core Data model if it hasn't dublicate in existing database
                 saveDataToContainer()
+                
                 // removing loading view from superview when the parsing is done
                 loadView.removeFromSuperview()
                 
