@@ -25,7 +25,7 @@ struct Parser {
     }
     
     func makeBrands() {
-        let html = "<option value=\"PHANT\">Phantom</option><option value=\"WRAI\">Wraith</option><option value=\"GHOST\">Ghost</option><option value=\"RRCULLINAN\">Cullinan</option>"
+        let html = "<option value=\"S60\">S60</option><option value=\"S90\">S90</option><option value=\"VOLVOV60\">V60</option><option value=\"V90\">V90</option><option value=\"VOLVOXC40\">XC40</option><option value=\"XC60\">XC60</option><option value=\"XC\">XC70</option><option value=\"XC90\">XC90</option>"
         do {
             let innerHtml = try SwiftSoup.parse(html)
             let justArray = try innerHtml.select("option").array()

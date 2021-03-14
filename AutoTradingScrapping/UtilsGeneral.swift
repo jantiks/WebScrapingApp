@@ -176,14 +176,27 @@ class UtilsGeneral {
                          ["label":"Rolls-Royce","value":"RR", "models":
                             // models
                             ["Ghost": "GHOST", "Cullinan": "RRCULLINAN", "Wraith": "WRAI", "Phantom": "PHANT"]],
-                         ["label":"Saturn","value":"SATURN" ],
-                         ["label":"Subaru","value":"SUB" ],
-                         ["label":"Suzuki","value":"SUZUKI" ],
-                         ["label":"Tesla","value":"TESLA" ],
-                         ["label":"Toyota","value":"TOYOTA" ],
-                         ["label":"Volkswagen","value":"VOLKS" ],
-                         ["label":"Volvo","value":"VOLVO" ],
-                         ["label":"Yugo","value":"YUGO" ]]
+                         ["label":"Saturn","value":"SATURN", "models":
+                            // models
+                            ["Sky": "SKY", "Vue": "VUE"] ],
+                         ["label":"Subaru","value":"SUB", "models":
+                            // models
+                            ["Forester": "FOREST", "Impreza": "IMPREZ", "Impreza WRX": "IMPWRX", "Outback": "SUBOUTBK", "WRX": "SUBWRX", "Crosstrek": "SUBCRSSTRK"]],
+                         ["label":"Suzuki","value":"SUZUKI", "models":
+                            // models
+                            ["SX4": "SX4", "Grand Vitara": "GRANDV", "Samurai": "SAMUR"] ],
+                         ["label":"Tesla","value":"TESLA", "models":
+                            // models
+                            ["Model 3": "TESMOD3", "Model X": "TESMODX", "Model Y": "TESMODY"] ],
+                         ["label":"Toyota","value":"TOYOTA", "models":
+                            // models
+                            ["Highlander": "HIGHLANDER", "Tundra": "TUNDRA", "4Runner": "4RUN", "Camry": "CAMRY", "RAV4": "RAV4", "Corolla": "COROL", "Prius": "PRIUS", "Tacoma": "TACOMA"]],
+                         ["label":"Volkswagen","value":"VOLKS", "models":
+                            // models
+                            ["GTI": "GTI", "Tiguan": "TIGUAN", "Jetta": "JET", "Atlas": "VOLKSATL", "Passat": "PASS", "Golf R": "GOLFR", "Beetle": "BEETLE", "Golf": "GOLF"]],
+                         ["label":"Volvo","value":"VOLVO", "models":
+                            // models
+                            ["V60": "VOLVOV60", "XC90": "XC90", "S90": "S90", "S60": "S60", "XC60": "XC60", "XC40": "VOLVOXC40", "V90": "V90", "XC70": "XC"]],]
     
 }
 

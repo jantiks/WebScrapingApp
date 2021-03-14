@@ -158,7 +158,6 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let brand = getBrandValue(value: self.brandValue).lowercased()
         let model = getBrandValue(value: self.modelValue).lowercased()
         
-        print(brand, model)
         
         let parser = Parser(brand: brand, model: model)
         parser.parseData { [unowned self] result in
