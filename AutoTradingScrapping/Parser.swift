@@ -12,9 +12,9 @@ import Erik
 struct Parser {
     private let resourceURL: URL
 
-    init(brand: String, model: String) {
+    init(brand: String, model: String, zipCode: String, startYear: String, endYear: String) {
         
-        let resourceString = "https://www.autotrader.com/cars-for-sale/all-cars/\(brand)/\(model)/new-york-ny-10001?dma=&searchRadius=100&isNewSearch=false&marketExtension=include&showAccelerateBanner=false&sortBy=relevance&numRecords=100"
+        let resourceString = "https://www.autotrader.com/cars-for-sale/all-cars/\(brand)/\(model)/new-york-ny-\(zipCode)?dma=&searchRadius=100&location=&startYear=\(startYear)&marketExtension=include&endYear=\(endYear)&isNewSearch=false&showAccelerateBanner=false&sortBy=relevance&numRecords=100"
         
             
         // website addres
@@ -24,41 +24,26 @@ struct Parser {
         
     }
     
-    func makeBrands() {
-        let html = "<option value=\"S60\">S60</option><option value=\"S90\">S90</option><option value=\"VOLVOV60\">V60</option><option value=\"V90\">V90</option><option value=\"VOLVOXC40\">XC40</option><option value=\"XC60\">XC60</option><option value=\"XC\">XC70</option><option value=\"XC90\">XC90</option>"
-        do {
-            let innerHtml = try SwiftSoup.parse(html)
-            let justArray = try innerHtml.select("option").array()
-            var titleArray = [String]()
-            for elem in justArray {
-                titleArray.append(try elem.text())
-            }
-            let arrays = html.components(separatedBy: "option value=")
-            var valueArray = [String]()
-            for elem in arrays {
-                let text = elem.components(separatedBy: ">")[0].replacingOccurrences(of: "\"", with: "")
-                if text == "<" {
-                    continue
-                } else {
-                    valueArray.append(text)
-                }
-            }
-//            let newtitleArray = titleArray.components(separatedBy: " ")
-
-            var dict = [String:String]()
-            for i in 0..<titleArray.count {
-                dict[titleArray[i]] = valueArray[i]
-            }
-            print(dict)
-        } catch {
-            print(error)
-        }
-        
-    }
     
     func parseData(completion: @escaping(Result<[Car], Error>) -> Void){
         var Cars = [Car]()
 
+        // timeout timer
+        let timer: Timer
+        var count = 0
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { (timer) in
+            timer.tolerance = 1
+            count += 1
+            print(count)
+            
+            if count == 30 {
+                timer.invalidate()
+                
+                completion(.failure(NSError(domain: "TimeOut", code: 69, userInfo: nil)))
+            }
+        }
+        
+        
         Erik.visit(url: resourceURL) { (doc, error) in
             /*
              doc: web page
@@ -80,7 +65,6 @@ struct Parser {
                     
                     // getting the phone number
                     let footer = try element.getElementsByClass("listing-footer")
-                    var phoneNumber = "" // phone number
                     for elem in footer {
                         if let phoneNumber = try elem.getElementsByClass("display-block").select("span").first()?.text() {
                             // getting price
@@ -97,9 +81,11 @@ struct Parser {
                     
                     
                 }
+                timer.invalidate()
                 completion(.success(Cars))
                 
             } catch  {
+                timer.invalidate()
                 completion(.failure(error))
             }
 

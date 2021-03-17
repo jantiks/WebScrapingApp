@@ -3,8 +3,9 @@
     <entity name="SearchData" representedClassName="SearchData" syncable="YES">
         <attribute name="brand" optional="YES" attributeType="String"/>
         <attribute name="model" optional="YES" attributeType="String"/>
+        <attribute name="zipCode" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="SearchData" positionX="-54" positionY="-9" width="128" height="73"/>
+        <element name="SearchData" positionX="-54" positionY="-9" width="128" height="88"/>
     </elements>
 </model>

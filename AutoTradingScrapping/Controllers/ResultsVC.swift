@@ -12,10 +12,16 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var tableView: UITableView!
     
     // instance variables
-    var container: NSPersistentContainer!
+    private var container: NSPersistentContainer!
     
     var brandValue = ""
     var modelValue = ""
+    var zipCode = ""
+    var startYear = ""
+    var endYear = ""
+    
+    private var parser: Parser? = nil
+    
     private var Cars = [Car]()
     private var SearchDatas = [SearchData]()
     
@@ -34,6 +40,11 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         super.loadView()
         parseData()
 
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        parser = nil
     }
     
     
@@ -90,6 +101,7 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
          */
         searchData.brand = brandValue
         searchData.model = modelValue
+        searchData.zipCode = zipCode
     }
     
     private func loadSavedData() {
@@ -118,8 +130,13 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
          */
         
         loadSavedData()
+        
+        
         for model in SearchDatas {
-            if model.brand == brandValue && model.model == modelValue {
+            /*
+             checking if data already exists then return
+             */
+            if (model.brand == brandValue) && (model.model == modelValue) && (model.zipCode == zipCode) {
                 return
             }
         }
@@ -159,26 +176,40 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let model = getBrandValue(value: self.modelValue).lowercased()
         
         
-        let parser = Parser(brand: brand, model: model)
-        parser.parseData { [unowned self] result in
+        parser = Parser(brand: brand, model: model, zipCode: zipCode, startYear: startYear, endYear: endYear)
+        parser?.parseData { [weak self] result in
+            
             switch result {
             case .success(let Cars):
-                self.Cars = Cars
+                self?.Cars = Cars
                 
                 // saving data to Core Data model if it hasn't dublicate in existing database
-                saveDataToContainer()
+                self?.saveDataToContainer()
                 
                 // removing loading view from superview when the parsing is done
                 loadView.removeFromSuperview()
                 
-                self.tableView.reloadData()
+                let ac = UIAlertController(title: "Success", message: "Data has parsed successfuly", preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "OK", style: .cancel))
+                
+                self?.present(ac, animated: true)
+                
+                self?.tableView.reloadData()
                 
             case .failure(let error):
+                
                 print(error.localizedDescription)
+                loadView.removeFromSuperview()
+                
+                // showning alert controller if the loading fails
+                let ac = UIAlertController(title: "Couldn't load the data", message: "Please check your internet conncetion", preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "OK", style: .cancel))
+                
+                self?.present(ac, animated: true)
             }
             
             // saving the data if it is changed
-            self.saveContext()
+            self?.saveContext()
         }
     }
     

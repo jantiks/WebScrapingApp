@@ -25,11 +25,6 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         tableView.delegate = self
         tableView.dataSource = self
         
-        // parsing the data
-        var parser = Parser(brand: "Toyota", model: "Camry")
-        parser.makeBrands()
-
-        
         setupUI()
         loadCarsData()
     }
@@ -65,7 +60,7 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") else { fatalError("couldn't load tableview cell") }
         cell.configureCellUI()
         cell.textLabel?.text = Cars[indexPath.row].brand
-        cell.detailTextLabel?.text = Cars[indexPath.row].model
+        cell.detailTextLabel?.text = "\(Cars[indexPath.row].model)  |  ZipCode - \(Cars[indexPath.row].zipCode)"
         return cell
     }
     
@@ -76,6 +71,7 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         guard let vc = storyboard?.instantiateViewController(withIdentifier: UtilsGeneral.SBID_ResultsVC) as? ResultsVC else { return }
         vc.brandValue = Cars[indexPath.row].brand
         vc.modelValue = Cars[indexPath.row].model
+        vc.zipCode = Cars[indexPath.row].zipCode
         
         navigationController?.pushViewController(vc, animated: true)
     }

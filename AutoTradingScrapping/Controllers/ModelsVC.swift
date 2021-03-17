@@ -20,6 +20,8 @@ class ModelsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
+        
+        title = "Choose Model"
     }
     
     
@@ -49,13 +51,56 @@ class ModelsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         /*
          when user taps on tableview row , viewcontroller oppens the ResultsVC
          */
-        let cell = tableView.cellForRow(at: indexPath)
-        guard let modelValue = cell?.textLabel?.text else { return }
-        guard let vc = storyboard?.instantiateViewController(withIdentifier: UtilsGeneral.SBID_ResultsVC) as? ResultsVC else { return }
-        vc.brandValue = brandValue
-        print("this is \(modelValue)")
-        vc.modelValue = modelValue
-        navigationController?.pushViewController(vc, animated: true)
+        let ac = UIAlertController(title: "Zip Code and Years range", message: "Enter a zip code and specify the years range", preferredStyle: .alert)
+        
+        // adding textfields to UIAlretController
+        ac.addTextField { (textField) in
+            textField.placeholder = "Zip Code"
+        }
+        ac.addTextField { (textField) in
+            textField.placeholder = "Start Year"
+        }
+        ac.addTextField { (textField) in
+            textField.placeholder = "End Year"
+        }
+        
+        // setting the keyboard typeto textfields
+        
+        guard let textFields = ac.textFields else { return }
+        for field in textFields {
+            field.keyboardType = .numberPad
+        }
+        
+        // submit action
+        let submit = UIAlertAction(title: "Submit", style: .default) { [unowned self] (action) in
+            
+            // getting the values of textfields
+            guard let zip = ac.textFields![0].text else { return }
+            guard let startYear = ac.textFields![1].text else { return }
+            guard let endYear = ac.textFields![2].text else { return }
+
+            let cell = tableView.cellForRow(at: indexPath)
+            guard let modelValue = cell?.textLabel?.text else { return }
+            
+            // ResultsVC
+            guard let vc = storyboard?.instantiateViewController(withIdentifier: UtilsGeneral.SBID_ResultsVC) as? ResultsVC else { return }
+            vc.brandValue = brandValue
+            vc.modelValue = modelValue
+            vc.zipCode = zip
+            vc.startYear = startYear
+            vc.endYear = endYear
+                        
+            navigationController?.pushViewController(vc, animated: true)
+        }
+        
+        // cancel action
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        ac.addAction(submit)
+        ac.addAction(cancel)
+        
+        present(ac, animated: true)
+        
     }
     
 
