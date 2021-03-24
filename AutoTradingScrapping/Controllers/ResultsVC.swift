@@ -28,6 +28,7 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Core Data Containter
+        makeContainer()
         
     }
     
@@ -103,6 +104,7 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         searchData.brand = brandValue
         searchData.model = modelValue
         searchData.zipCode = zipCode
+        
     }
     
     private func loadSavedData() {
@@ -128,7 +130,6 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         /*
          checks if existing database has the values , if not the method saves them
          */
-        
         loadSavedData()
         
         
@@ -171,8 +172,9 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         loadView.addSubview(label)
         self.view.addSubview(loadView)
         
+    
         
-//        for i in 0...2 {
+            // making the parameters for each page
             let params = SearchParams(brand: brandValue, model: modelValue, zipCode: zipCode, startYear: startYear, endYear: endYear, page: 0)
             let params1 = SearchParams(brand: brandValue, model: modelValue, zipCode: zipCode, startYear: startYear, endYear: endYear, page: 1)
             let params2 = SearchParams(brand: brandValue, model: modelValue, zipCode: zipCode, startYear: startYear, endYear: endYear, page: 2)
@@ -186,28 +188,28 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 case .success(let parsedCars):
                     self?.Cars += parsedCars
                     
-                    // 1
+                    // page 1
                     let parser1 = Parser(params: params1)
                     parser1.parseData { [weak self] result in
                         switch result {
                         case .success(let parsedCars1):
                             self?.Cars += parsedCars1
                             
-                            // 2
+                            // page 2
                             let parser2 = Parser(params: params2)
                             parser2.parseData { [weak self] result in
                                 switch result {
                                 case .success(let parsedCars2):
                                     self?.Cars += parsedCars2
                                     
-                                    // 3
+                                    // page 3
                                     let parser3 = Parser(params: params3)
                                     parser3.parseData { [weak self] result in
                                         switch result {
                                         case .success(let parsedCars3):
                                             self?.Cars += parsedCars3
                                             
-                                            // 4
+                                            // page 4
                                             let parser4 = Parser(params: params4)
                                             parser4.parseData { [weak self] result in
                                                 switch result {
@@ -233,6 +235,8 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                                                     // showning alert controller if the loading fails
                                                     self?.showFailAlert()
                                                 }
+                                                // saving the data if it is changed
+                                                self?.saveContext()
                                             }
                                         case .failure(let error):
                                             print(error.localizedDescription)
@@ -271,10 +275,12 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                     // showning alert controller if the loading fails
                     self?.showFailAlert()
                 }
+                
+                
             }
                 
         
-//        }
+        
     }
     
     private func showFailAlert() {

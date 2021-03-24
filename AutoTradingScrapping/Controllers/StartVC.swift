@@ -16,7 +16,7 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet private weak var addButton: UIButton!
     
     // instance variables
-    private var container: NSPersistentContainer!
+    public static var container: NSPersistentContainer!
     private var Cars = [SearchData]()
         
     override func viewDidLoad() {
@@ -89,7 +89,7 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         if editingStyle == .delete {
             
             // deleting the data from Core Data store
-            container.viewContext.delete(Cars[indexPath.row])
+            StartVC.container.viewContext.delete(Cars[indexPath.row])
             Cars.remove(at: indexPath.row)
             
             tableView.deleteRows(at: [indexPath], with: .automatic) // deleting row
@@ -120,8 +120,8 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
          makes the NSPersistentContainer
          */
         
-        container = NSPersistentContainer(name: "Model")
-        container?.loadPersistentStores { storeDescription, error in
+        StartVC.container = NSPersistentContainer(name: "Model")
+        StartVC.container?.loadPersistentStores { storeDescription, error in
             if let error = error {
                 print("Unresolved error \(error)")
             }
@@ -133,9 +133,9 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
          this function saves the data to the disk
          */
         
-        if container.viewContext.hasChanges {
+        if StartVC.container.viewContext.hasChanges {
             do {
-                try container.viewContext.save()
+                try StartVC.container.viewContext.save()
             } catch  {
                 print("An error occurred while saving: \(error)")
             }
@@ -153,7 +153,7 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         request.sortDescriptors = [sort]
         
         do {
-            Cars = try container.viewContext.fetch(request)
+            Cars = try StartVC.container.viewContext.fetch(request)
             print("got \(Cars.count) datas")
         } catch  {
             print("error")

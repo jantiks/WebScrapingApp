@@ -13,10 +13,9 @@ struct Parser {
     private var resourceURLStr = ""
 
     init(params: SearchParams) {
-        let resourceString = getResourceString(params)
-    
+        
         // website addres
-        self.resourceURLStr = resourceString
+        self.resourceURLStr = getResourceString(params)
         
     }
     
@@ -28,6 +27,11 @@ struct Parser {
         } else if params.page > 0 {
             resourceStr = "https://www.autotrader.com/cars-for-sale/all-cars/\(params.brand)/\(params.model)/new-york-ny-\(params.zipCode)?dma=&searchRadius=25&isNewSearch=false&marketExtension=include&showAccelerateBanner=false&sortBy=relevance&numRecords=100&firstRecord=\(100 * params.page)"
         }
+        
+        if !(params.startYear.isEmpty) {
+            resourceStr += "&startYear=\(params.startYear)"
+        }
+            
         return resourceStr
     }
     
@@ -50,7 +54,7 @@ struct Parser {
         }
         
         // making the url
-        guard let resourceURL = URL(string: resourceURLStr) else { fatalError("Couldn't make the url") }
+        guard let resourceURL = URL(string: resourceURLStr) else { return }
         
         Erik.visit(url: resourceURL) { (doc, error) in
             /*

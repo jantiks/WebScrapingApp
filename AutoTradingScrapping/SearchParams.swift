@@ -11,7 +11,7 @@ struct SearchParams {
     let brand: String
     let model: String
     let zipCode: String
-    let startYear: String?
-    let endYear: String?
+    let startYear: String
+    let endYear: String
     let page: Int
 }
