@@ -85,7 +85,7 @@ class ModelsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             // ResultsVC
             guard let vc = storyboard?.instantiateViewController(withIdentifier: UtilsGeneral.SBID_ResultsVC) as? ResultsVC else { return }
             vc.brandValue = brandValue
-            vc.modelValue = modelValue
+            vc.modelValue = getModelValue(value: modelValue)
             vc.zipCode = zip
             vc.startYear = startYear
             vc.endYear = endYear
@@ -101,6 +101,24 @@ class ModelsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         present(ac, animated: true)
         
+    }
+    
+    private func getModelValue(value: String) -> String {
+        /*
+         value: the brand name or model name of car
+         this method returnes configured value
+         */
+        
+        var newValue = value
+        if newValue.starts(with: "- ") {
+            print(newValue)
+            newValue.removeFirst()
+            newValue.removeFirst()
+        }
+        
+        newValue = newValue.replacingOccurrences(of: " ", with: "-")
+        
+        return newValue
     }
     
 

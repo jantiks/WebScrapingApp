@@ -13,7 +13,6 @@ struct Parser {
     private var resourceURLStr = ""
 
     init(params: SearchParams) {
-        
         // website addres
         self.resourceURLStr = getResourceString(params)
         
@@ -30,6 +29,10 @@ struct Parser {
         
         if !(params.startYear.isEmpty) {
             resourceStr += "&startYear=\(params.startYear)"
+        }
+        
+        if !(params.endYear.isEmpty) {
+            resourceStr += "&endYear=\(params.endYear)"
         }
             
         return resourceStr
@@ -55,7 +58,6 @@ struct Parser {
         
         // making the url
         guard let resourceURL = URL(string: resourceURLStr) else { return }
-        
         Erik.visit(url: resourceURL) { (doc, error) in
             /*
              doc: web page
@@ -65,7 +67,6 @@ struct Parser {
             
             
             do {
-
                 guard let innerHTML = doc?.innerHTML else { return } // making string from html
                 let htmlBody = try SwiftSoup.parse((innerHTML)) // parsing html string
                 let cardElements = try htmlBody.getElementsByClass("item-card-content") // getting all html from car listing
@@ -87,15 +88,11 @@ struct Parser {
                                 let car = Car(title: title, price: price, phoneNumber: phoneNumber)
                                 Cars.append(car)
                             }
-                            
                         }
                     }
-                    
-                    
                 }
                 timer.invalidate()
                 completion(.success(Cars))
-                print(Cars.count > 3 ? "\(Cars[3])":"smal amount")
                 
             } catch  {
                 timer.invalidate()

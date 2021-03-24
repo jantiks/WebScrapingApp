@@ -34,7 +34,7 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
     }
     
     override func loadView() {
@@ -279,8 +279,6 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 
             }
                 
-        
-        
     }
     
     private func showFailAlert() {
@@ -293,22 +291,7 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         self.present(ac, animated: true)
     }
-    private func getBrandValue(value: String) -> String {
-        /*
-         value: the brand name or model name of car
-         this method returnes configured value
-         */
-        
-        var newValue = value
-        if newValue.starts(with: "- ") {
-            newValue.removeFirst()
-            newValue.removeFirst()
-        }
-        
-        newValue = newValue.replacingOccurrences(of: " ", with: "-")
-        
-        return newValue
-    }
+    
 
     
 }
