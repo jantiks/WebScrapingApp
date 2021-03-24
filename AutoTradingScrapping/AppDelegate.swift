@@ -7,17 +7,18 @@
 
 import UIKit
 import UserNotifications
+import BackgroundTasks
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         regisetLocal()
         scheduleLocal()
+        scheduleBGTasks()
         return true
     }
+
 
     
     // MARK: UISceneSession Lifecycle
@@ -34,6 +35,42 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
 
+    // MARK: Background Task
+    
+    private func scheduleBGTasks() {
+        /*
+         registering the background task
+         */
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.jantiks.fetchCars", using: nil) { (task) in
+            self.handleAppRefreshTask(task: task)
+        }
+    }
+    
+    private func handleAppRefreshTask(task: BGTask) {
+        /*
+         handling the refresh task
+         */
+        task.expirationHandler = {
+//            Parser.invalidateParser()
+        }
+        // code to be here
+    }
+    
+    func scheduleBGCarsFetch() {
+        /*
+         scheduleing the background task
+         */
+        
+        let carsFetchTask = BGAppRefreshTaskRequest(identifier: "com.jantiks.fetchCars")
+        carsFetchTask.earliestBeginDate = Date(timeIntervalSinceNow: 60)
+        
+        do {
+            try BGTaskScheduler.shared.submit(carsFetchTask)
+        } catch  {
+            print("unable to submit task \(error.localizedDescription)")
+        }
+    }
+    
     // MARK: UserNotifications
     private func regisetLocal() {
         /*
@@ -52,6 +89,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     private func scheduleLocal() {
+        /*
+         schedules local notifications
+         */
+        
         let center = UNUserNotificationCenter.current()
         
         let content = UNMutableNotificationContent()

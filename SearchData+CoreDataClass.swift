@@ -11,5 +11,4 @@ import CoreData
 
 @objc(SearchData)
 public class SearchData: NSManagedObject {
-
 }

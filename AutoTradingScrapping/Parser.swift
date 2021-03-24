@@ -12,9 +12,15 @@ import Erik
 struct Parser {
     private let resourceURL: URL
 
-    init(brand: String, model: String, zipCode: String, startYear: String, endYear: String) {
+    init(params: SearchParams) {
+        var resourceString = ""
         
-        let resourceString = "https://www.autotrader.com/cars-for-sale/all-cars/\(brand)/\(model)/new-york-ny-\(zipCode)?dma=&searchRadius=100&location=&startYear=\(startYear)&marketExtension=include&endYear=\(endYear)&isNewSearch=false&showAccelerateBanner=false&sortBy=relevance&numRecords=100"
+        if params.page == 0 {
+            resourceString = "https://www.autotrader.com/cars-for-sale/all-cars/\(params.brand)/\(params.model)/new-york-ny-\(params.zipCode)?dma=&searchRadius=25&isNewSearch=false&marketExtension=include&showAccelerateBanner=false&sortBy=relevance&numRecords=100"
+        } else if params.page > 0 {
+            resourceString = "https://www.autotrader.com/cars-for-sale/all-cars/audi/q7/new-york-ny-10001?dma=&searchRadius=25&isNewSearch=false&marketExtension=include&showAccelerateBanner=false&sortBy=relevance&numRecords=100"
+        }
+        
         
             
         // website addres

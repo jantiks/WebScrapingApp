@@ -11,6 +11,7 @@
 		98608B3A25FDDC0800DC9B4A /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 98608B3825FDDC0800DC9B4A /* Model.xcdatamodeld */; };
 		98608B4425FE017B00DC9B4A /* SearchData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98608B4225FE017B00DC9B4A /* SearchData+CoreDataClass.swift */; };
 		98608B4525FE017B00DC9B4A /* SearchData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98608B4325FE017B00DC9B4A /* SearchData+CoreDataProperties.swift */; };
+		9882C405260A0BB70066DA0C /* SearchParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9882C404260A0BB70066DA0C /* SearchParams.swift */; };
 		98867EC925F7EBD600A447B1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98867EC825F7EBD600A447B1 /* AppDelegate.swift */; };
 		98867ECB25F7EBD600A447B1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98867ECA25F7EBD600A447B1 /* SceneDelegate.swift */; };
 		98867ED025F7EBD600A447B1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98867ECE25F7EBD600A447B1 /* Main.storyboard */; };
@@ -34,6 +35,7 @@
 		98608B3925FDDC0800DC9B4A /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		98608B4225FE017B00DC9B4A /* SearchData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SearchData+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		98608B4325FE017B00DC9B4A /* SearchData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SearchData+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
+		9882C404260A0BB70066DA0C /* SearchParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchParams.swift; sourceTree = "<group>"; };
 		98867EC525F7EBD500A447B1 /* AutoTradingScrapping.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoTradingScrapping.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98867EC825F7EBD600A447B1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		98867ECA25F7EBD600A447B1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -175,6 +177,7 @@
 			isa = PBXGroup;
 			children = (
 				98BCB6E125FA6EEB0035B6F5 /* Car.swift */,
+				9882C404260A0BB70066DA0C /* SearchParams.swift */,
 			);
 			name = DataModel;
 			sourceTree = "<group>";
@@ -309,6 +312,7 @@
 				98867ECB25F7EBD600A447B1 /* SceneDelegate.swift in Sources */,
 				9896220025F90A6D006EC3F2 /* BrandsVC.swift in Sources */,
 				98608B4525FE017B00DC9B4A /* SearchData+CoreDataProperties.swift in Sources */,
+				9882C405260A0BB70066DA0C /* SearchParams.swift in Sources */,
 				989621F925F90280006EC3F2 /* UtilsGeneral.swift in Sources */,
 				9896220D25F9117A006EC3F2 /* Parser.swift in Sources */,
 				98CF2C7125F8E83700C04D65 /* StartVC.swift in Sources */,

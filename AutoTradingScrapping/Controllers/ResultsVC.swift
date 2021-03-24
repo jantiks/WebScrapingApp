@@ -7,6 +7,7 @@
 
 import UIKit
 import CoreData
+import WebKit
 
 class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var tableView: UITableView!
@@ -20,15 +21,14 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var startYear = ""
     var endYear = ""
     
-    private var parser: Parser? = nil
-    
+        
     private var Cars = [Car]()
     private var SearchDatas = [SearchData]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Core Data Containter
-        makeContainer()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -38,13 +38,14 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     override func loadView() {
         super.loadView()
+        makeContainer()
         parseData()
 
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        parser = nil
+
     }
     
     
@@ -116,7 +117,6 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         do {
             SearchDatas = try container.viewContext.fetch(request)
-            print("got \(SearchDatas.count) datas")
         } catch  {
             print("error")
         }
@@ -171,46 +171,61 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         loadView.addSubview(label)
         self.view.addSubview(loadView)
         
-        // parsing the data
-        let brand = getBrandValue(value: self.brandValue).lowercased()
-        let model = getBrandValue(value: self.modelValue).lowercased()
         
+//        for i in 0...2 {
+            let params = SearchParams(brand: brandValue, model: modelValue, zipCode: zipCode, startYear: startYear, endYear: endYear, page: 0)
+            let params1 = SearchParams(brand: brandValue, model: modelValue, zipCode: zipCode, startYear: startYear, endYear: endYear, page: 1)
         
-        parser = Parser(brand: brand, model: model, zipCode: zipCode, startYear: startYear, endYear: endYear)
-        parser?.parseData { [weak self] result in
-            
-            switch result {
-            case .success(let Cars):
-                self?.Cars = Cars
-                
-                // saving data to Core Data model if it hasn't dublicate in existing database
-                self?.saveDataToContainer()
-                
-                // removing loading view from superview when the parsing is done
-                loadView.removeFromSuperview()
-                
-                let ac = UIAlertController(title: "Success", message: "Data has parsed successfuly", preferredStyle: .alert)
-                ac.addAction(UIAlertAction(title: "OK", style: .cancel))
-                
-                self?.present(ac, animated: true)
-                
-                self?.tableView.reloadData()
-                
-            case .failure(let error):
-                
-                print(error.localizedDescription)
-                loadView.removeFromSuperview()
-                
-                // showning alert controller if the loading fails
-                let ac = UIAlertController(title: "Couldn't load the data", message: "Please check your internet conncetion", preferredStyle: .alert)
-                ac.addAction(UIAlertAction(title: "OK", style: .cancel))
-                
-                self?.present(ac, animated: true)
+            let parser = Parser(params: params)
+            parser.parseData { [weak self] result in
+                switch result {
+                case .success(let parsedCars):
+                    self?.Cars += parsedCars
+                    
+                    let parser1 = Parser(params: params1)
+                    parser1.parseData { [weak self] result in
+                        switch result {
+                        case .success(let parsedCars1):
+                            self?.Cars += parsedCars1
+                            self?.saveDataToContainer()
+                            
+                            // removing loading view from superview when the parsing is done
+                            loadView.removeFromSuperview()
+                            
+                            let ac = UIAlertController(title: "Success", message: "Data has parsed successfuly", preferredStyle: .alert)
+                            ac.addAction(UIAlertAction(title: "OK", style: .cancel))
+                            
+                            self?.present(ac, animated: true)
+                            
+                            self?.tableView.reloadData()
+                            
+                            
+                        case .failure(let error):
+                            print(error.localizedDescription)
+                            loadView.removeFromSuperview()
+                            
+                            // showning alert controller if the loading fails
+                            let ac = UIAlertController(title: "Couldn't load the data", message: "Please check your internet conncetion", preferredStyle: .alert)
+                            ac.addAction(UIAlertAction(title: "OK", style: .cancel))
+                            
+                            self?.present(ac, animated: true)
+                        }
+                    }
+                    
+                case .failure(let error):
+                    print(error.localizedDescription)
+                    loadView.removeFromSuperview()
+                    
+                    // showning alert controller if the loading fails
+                    let ac = UIAlertController(title: "Couldn't load the data", message: "Please check your internet conncetion", preferredStyle: .alert)
+                    ac.addAction(UIAlertAction(title: "OK", style: .cancel))
+                    
+                    self?.present(ac, animated: true)
+                }
             }
-            
-            // saving the data if it is changed
-            self?.saveContext()
-        }
+                
+        
+//        }
     }
     
     private func getBrandValue(value: String) -> String {
