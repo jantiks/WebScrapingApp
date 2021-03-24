@@ -10,26 +10,26 @@ import SwiftSoup
 import Erik
 
 struct Parser {
-    private let resourceURL: URL
+    private var resourceURLStr = ""
 
     init(params: SearchParams) {
-        var resourceString = ""
-        
-        if params.page == 0 {
-            resourceString = "https://www.autotrader.com/cars-for-sale/all-cars/\(params.brand)/\(params.model)/new-york-ny-\(params.zipCode)?dma=&searchRadius=25&isNewSearch=false&marketExtension=include&showAccelerateBanner=false&sortBy=relevance&numRecords=100"
-        } else if params.page > 0 {
-            resourceString = "https://www.autotrader.com/cars-for-sale/all-cars/audi/q7/new-york-ny-10001?dma=&searchRadius=25&isNewSearch=false&marketExtension=include&showAccelerateBanner=false&sortBy=relevance&numRecords=100"
-        }
-        
-        
-            
+        let resourceString = getResourceString(params)
+    
         // website addres
-        guard let resourceURL = URL(string: resourceString) else { fatalError(resourceString) }
-        
-        self.resourceURL = resourceURL
+        self.resourceURLStr = resourceString
         
     }
     
+    private func getResourceString(_ params: SearchParams) -> String {
+        var resourceStr = ""
+        
+        if params.page == 0 {
+            resourceStr = "https://www.autotrader.com/cars-for-sale/all-cars/\(params.brand)/\(params.model)/new-york-ny-\(params.zipCode)?dma=&searchRadius=25&isNewSearch=false&marketExtension=include&showAccelerateBanner=false&sortBy=relevance&numRecords=100"
+        } else if params.page > 0 {
+            resourceStr = "https://www.autotrader.com/cars-for-sale/all-cars/\(params.brand)/\(params.model)/new-york-ny-\(params.zipCode)?dma=&searchRadius=25&isNewSearch=false&marketExtension=include&showAccelerateBanner=false&sortBy=relevance&numRecords=100&firstRecord=\(100 * params.page)"
+        }
+        return resourceStr
+    }
     
     func parseData(completion: @escaping(Result<[Car], Error>) -> Void){
         var Cars = [Car]()
@@ -49,6 +49,8 @@ struct Parser {
             }
         }
         
+        // making the url
+        guard let resourceURL = URL(string: resourceURLStr) else { fatalError("Couldn't make the url") }
         
         Erik.visit(url: resourceURL) { (doc, error) in
             /*
@@ -89,6 +91,7 @@ struct Parser {
                 }
                 timer.invalidate()
                 completion(.success(Cars))
+                print(Cars.count > 3 ? "\(Cars[3])":"smal amount")
                 
             } catch  {
                 timer.invalidate()
