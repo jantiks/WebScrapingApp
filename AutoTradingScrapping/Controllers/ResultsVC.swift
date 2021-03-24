@@ -175,6 +175,10 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 //        for i in 0...2 {
             let params = SearchParams(brand: brandValue, model: modelValue, zipCode: zipCode, startYear: startYear, endYear: endYear, page: 0)
             let params1 = SearchParams(brand: brandValue, model: modelValue, zipCode: zipCode, startYear: startYear, endYear: endYear, page: 1)
+            let params2 = SearchParams(brand: brandValue, model: modelValue, zipCode: zipCode, startYear: startYear, endYear: endYear, page: 2)
+            let params3 = SearchParams(brand: brandValue, model: modelValue, zipCode: zipCode, startYear: startYear, endYear: endYear, page: 3)
+            let params4 = SearchParams(brand: brandValue, model: modelValue, zipCode: zipCode, startYear: startYear, endYear: endYear, page: 4)
+    
         
             let parser = Parser(params: params)
             parser.parseData { [weak self] result in
@@ -182,22 +186,73 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 case .success(let parsedCars):
                     self?.Cars += parsedCars
                     
+                    // 1
                     let parser1 = Parser(params: params1)
                     parser1.parseData { [weak self] result in
                         switch result {
                         case .success(let parsedCars1):
                             self?.Cars += parsedCars1
-                            self?.saveDataToContainer()
                             
-                            // removing loading view from superview when the parsing is done
-                            loadView.removeFromSuperview()
-                            
-                            let ac = UIAlertController(title: "Success", message: "Data has parsed successfuly", preferredStyle: .alert)
-                            ac.addAction(UIAlertAction(title: "OK", style: .cancel))
-                            
-                            self?.present(ac, animated: true)
-                            
-                            self?.tableView.reloadData()
+                            // 2
+                            let parser2 = Parser(params: params2)
+                            parser2.parseData { [weak self] result in
+                                switch result {
+                                case .success(let parsedCars2):
+                                    self?.Cars += parsedCars2
+                                    
+                                    // 3
+                                    let parser3 = Parser(params: params3)
+                                    parser3.parseData { [weak self] result in
+                                        switch result {
+                                        case .success(let parsedCars3):
+                                            self?.Cars += parsedCars3
+                                            
+                                            // 4
+                                            let parser4 = Parser(params: params4)
+                                            parser4.parseData { [weak self] result in
+                                                switch result {
+                                                case .success(let parsedCars4):
+                                                    self?.Cars += parsedCars4
+                                                    
+                                                    // saving the data
+                                                    self?.saveDataToContainer()
+                                                    
+                                                    // removing loading view from superview when the parsing is done
+                                                    loadView.removeFromSuperview()
+                                                    
+                                                    let ac = UIAlertController(title: "Success", message: "Data has parsed successfuly", preferredStyle: .alert)
+                                                    ac.addAction(UIAlertAction(title: "OK", style: .cancel))
+                                                    
+                                                    self?.present(ac, animated: true)
+                                                    
+                                                    self?.tableView.reloadData()
+                                                case.failure(let error):
+                                                    print(error.localizedDescription)
+                                                    loadView.removeFromSuperview()
+                                                    
+                                                    // showning alert controller if the loading fails
+                                                    self?.showFailAlert()
+                                                }
+                                            }
+                                        case .failure(let error):
+                                            print(error.localizedDescription)
+                                            loadView.removeFromSuperview()
+                                            
+                                            // showning alert controller if the loading fails
+                                            self?.showFailAlert()
+                                        }
+                                        
+                                    }
+                                case .failure(let error):
+                                    print(error.localizedDescription)
+                                    loadView.removeFromSuperview()
+                                    
+                                    // showning alert controller if the loading fails
+                                    self?.showFailAlert()
+                                }
+                                
+                                
+                            }
                             
                             
                         case .failure(let error):
@@ -205,10 +260,7 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                             loadView.removeFromSuperview()
                             
                             // showning alert controller if the loading fails
-                            let ac = UIAlertController(title: "Couldn't load the data", message: "Please check your internet conncetion", preferredStyle: .alert)
-                            ac.addAction(UIAlertAction(title: "OK", style: .cancel))
-                            
-                            self?.present(ac, animated: true)
+                            self?.showFailAlert()
                         }
                     }
                     
@@ -217,10 +269,7 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                     loadView.removeFromSuperview()
                     
                     // showning alert controller if the loading fails
-                    let ac = UIAlertController(title: "Couldn't load the data", message: "Please check your internet conncetion", preferredStyle: .alert)
-                    ac.addAction(UIAlertAction(title: "OK", style: .cancel))
-                    
-                    self?.present(ac, animated: true)
+                    self?.showFailAlert()
                 }
             }
                 
@@ -228,6 +277,16 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
 //        }
     }
     
+    private func showFailAlert() {
+        /*
+         shows alert when the parsing fails
+         */
+        
+        let ac = UIAlertController(title: "Couldn't load the data", message: "Please check your internet conncetion", preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "OK", style: .cancel))
+        
+        self.present(ac, animated: true)
+    }
     private func getBrandValue(value: String) -> String {
         /*
          value: the brand name or model name of car
