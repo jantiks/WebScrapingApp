@@ -12,6 +12,8 @@ import BackgroundTasks
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    var dataManager: DataManager? = nil
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         scheduleBGTasks()
         return true
@@ -52,12 +54,41 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            Parser.invalidateParser()
         }
         
+        dataManager = DataManager()
+        guard let searchDatas = dataManager?.loadSavedData() else { return }
+        let searchData = searchDatas[0]
+        let params = SearchParams(brand: searchData.brand, model: searchData.model, zipCode: searchData.zipCode, startYear: searchData.startYear, endYear: searchData.endYear, page: 0)
         
-        regisetLocal()
-//        scheduleLocal(title: <#String#>, phoneNumber: <#String#>, price: <#String#>)
+        // parsing the data
+        guard let result = searchData.result?.filter else { return }
+        let parser = Parser(params: params)
+        parser.parseData { [weak self] result in
+            print("is parsing in bg")
+            switch result {
+            case.success(let Cars):
+                for parsedCar in Cars {
+//                    for car in result {
+                        if true {
+                            print("you should see the notification")
+                            self?.regisetLocal()
+                            self?.scheduleLocal(title: parsedCar.title, phoneNumber: parsedCar.phoneNumber, price: parsedCar.price)
+                            task.setTaskCompleted(success: true)
+
+                        }
+//                    }
+                }
+            case.failure( _):
+                print("error")
+                task.setTaskCompleted(success: false)
+                
+            }
+            
+        }
         
-        // code to be here
+
         
+        scheduleBGTasks()
+
     }
     
     func scheduleBGCarsFetch() {
@@ -103,7 +134,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         content.title = title
         content.body = "\(phoneNumber)   \(price)"
         print("passed")
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 20, repeats: false)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
         
         center.add(request)

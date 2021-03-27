@@ -42,7 +42,8 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         super.loadView()
 //        makeContainer()
         let params = SearchParams(brand: brandValue, model: modelValue, zipCode: zipCode, startYear: startYear, endYear: endYear, page: 0)
-        dataManager = DataManager(params: params)
+        dataManager = DataManager()
+        dataManager?.setParams(params: params) // passing parameter
         parseData()
 
     }

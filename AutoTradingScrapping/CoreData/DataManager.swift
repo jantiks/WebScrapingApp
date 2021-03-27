@@ -10,13 +10,12 @@ import CoreData
 
 class DataManager {
     private var container: NSPersistentContainer!
-    private var parameters: SearchParams
+    private var parameters: SearchParams? = nil
     
-    init(params: SearchParams) {
+    init() {
         /*
          makes the NSPersistentContainer
          */
-        self.parameters = params
         container = NSPersistentContainer(name: "Model")
         container.loadPersistentStores { storeDescription, error in
             if let error = error {
@@ -25,6 +24,9 @@ class DataManager {
         }
     }
     
+    func setParams(params: SearchParams) {
+        self.parameters = params
+    }
     
     func saveContext() {
         /*
@@ -45,15 +47,20 @@ class DataManager {
          this function saves the data to CoreData model
          */
         // saving the search data
-        searchData.brand = parameters.brand
-        searchData.model = parameters.model
-        searchData.zipCode = parameters.zipCode
+        guard let params = parameters else { return }
+        
+        searchData.brand = params.brand
+        searchData.model = params.model
+        searchData.zipCode = params.zipCode
+        searchData.startYear = params.startYear
+        searchData.endYear = params.endYear
         searchData.result = carsData
+        
         print("this is count \(searchData.result?.count)")
         
     }
     
-    private func loadSavedData() -> [SearchData] {
+    func loadSavedData() -> [SearchData] {
         /*
          loads the data from Core Data NSPersistentStore
          @return array of
@@ -61,7 +68,7 @@ class DataManager {
         var searchDatas = [SearchData]()
         
         let request: NSFetchRequest<SearchData> = SearchData.fetchRequest()
-        let sort = NSSortDescriptor(key: "brand", ascending: false)
+        let sort = NSSortDescriptor(key: "brand", ascending: true)
         
         request.sortDescriptors = [sort]
         
@@ -102,8 +109,14 @@ class DataManager {
             /*
              checking if data already exists then return
              */
+            guard let params = parameters else { return }
+
             
-            if (model.brand == parameters.brand) && (model.model == parameters.model) && (model.zipCode == parameters.zipCode) {
+            if (model.brand == params.brand) &&
+                (model.model == params.model) &&
+                (model.zipCode == params.zipCode) &&
+                (model.startYear == params.startYear) &&
+                (model.endYear == params.endYear) {
                 model.result = NSSet(array: carsData) // update result if search has already done before
                 return
             }

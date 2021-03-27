@@ -19,7 +19,8 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     public static var container: NSPersistentContainer!
     private var SearchDatas = [SearchData]()
     private var Cars = [CarsData]()
-        
+    private var dataManager: DataManager? = nil
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -96,7 +97,7 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             
             tableView.deleteRows(at: [indexPath], with: .automatic) // deleting row
             
-            saveContext() // saving changes 
+            dataManager?.saveContext() // saving changes
             
             
         }
@@ -111,64 +112,11 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     //MARK: CoreData
     
     private func loadCarsData() {
-        makeContainer()
-        loadSavedData()
+        dataManager = DataManager()
+        SearchDatas = dataManager?.loadSavedData() ?? [SearchData]()
         
         tableView.reloadData()
     }
-    
-    private func makeContainer() {
-        /*
-         makes the NSPersistentContainer
-         */
-        
-        StartVC.container = NSPersistentContainer(name: "Model")
-        StartVC.container?.loadPersistentStores { storeDescription, error in
-            if let error = error {
-                print("Unresolved error \(error)")
-            }
-        }
-    }
-    
-    private func saveContext() {
-        /*
-         this function saves the data to the disk
-         */
-        
-        if StartVC.container.viewContext.hasChanges {
-            do {
-                try StartVC.container.viewContext.save()
-            } catch  {
-                print("An error occurred while saving: \(error)")
-            }
-        }
-    }
-    
-    private func loadSavedData() {
-        /*
-         loads the data from Core Data NSPersistentStore
-         */
-        
-        let searchRequest: NSFetchRequest<SearchData> = SearchData.fetchRequest()
-        let searchSort = NSSortDescriptor(key: "brand", ascending: true)
-        
-        searchRequest.sortDescriptors = [searchSort]
-        
-//        let resultSort = NSSortDescriptor(key: "", ascending: true)
-        
-        
-        
-        do {
-            SearchDatas = try StartVC.container.viewContext.fetch(searchRequest)
-            print("got \(SearchDatas.count) datas")
-            print("got \(Cars.count), cars")
-        } catch  {
-            print("error")
-        }
-        
-
-    }
-    
     
     
 }

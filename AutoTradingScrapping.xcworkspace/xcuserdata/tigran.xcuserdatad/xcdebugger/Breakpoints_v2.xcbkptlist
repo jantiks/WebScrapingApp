@@ -14,8 +14,8 @@
             filePath = "AutoTradingScrapping/Controllers/ResultsVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "109"
-            endingLineNumber = "109"
+            startingLineNumber = "110"
+            endingLineNumber = "110"
             landmarkName = "parseData()"
             landmarkType = "7">
             <Locations>
@@ -126,8 +126,8 @@
             filePath = "AutoTradingScrapping/CoreData/SearchData+CoreDataProperties.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "28"
-            endingLineNumber = "28"
+            startingLineNumber = "31"
+            endingLineNumber = "31"
             landmarkName = "SearchData"
             landmarkType = "21">
          </BreakpointContent>

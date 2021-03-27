@@ -19,6 +19,9 @@ extension SearchData {
     @NSManaged public var brand: String
     @NSManaged public var model: String
     @NSManaged public var zipCode: String
+    @NSManaged public var startYear: String
+    @NSManaged public var endYear: String
+
     @NSManaged public var result: NSSet?
 
 }

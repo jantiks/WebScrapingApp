@@ -9,12 +9,14 @@
     </entity>
     <entity name="SearchData" representedClassName="SearchData" syncable="YES">
         <attribute name="brand" optional="YES" attributeType="String"/>
+        <attribute name="endYear" optional="YES" attributeType="String"/>
         <attribute name="model" optional="YES" attributeType="String"/>
+        <attribute name="startYear" optional="YES" attributeType="String"/>
         <attribute name="zipCode" optional="YES" attributeType="String"/>
         <relationship name="result" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CarsData" inverseName="searchData" inverseEntity="CarsData"/>
     </entity>
     <elements>
         <element name="CarsData" positionX="216.32421875" positionY="1.32421875" width="128" height="118"/>
-        <element name="SearchData" positionX="-54" positionY="-9" width="128" height="103"/>
+        <element name="SearchData" positionX="-54" positionY="-9" width="128" height="133"/>
     </elements>
 </model>
