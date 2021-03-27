@@ -49,7 +49,7 @@ struct Parser {
             count += 1
             print(count)
             
-            if count == 30 {
+            if count == 120 {
                 timer.invalidate()
                 
                 completion(.failure(NSError(domain: "TimeOut", code: 69, userInfo: nil)))

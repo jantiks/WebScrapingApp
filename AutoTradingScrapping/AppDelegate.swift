@@ -53,6 +53,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         task.expirationHandler = {
 //            Parser.invalidateParser()
         }
+        
+//        task.setTaskCompleted(success: <#T##Bool#>)
         // code to be here
         
     }
@@ -63,7 +65,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
          */
         
         let carsFetchTask = BGAppRefreshTaskRequest(identifier: "com.jantiks.fetchCars")
-        carsFetchTask.earliestBeginDate = Date(timeIntervalSinceNow: 60)
+        carsFetchTask.earliestBeginDate = Date(timeIntervalSinceNow: 30)
         
         do {
             try BGTaskScheduler.shared.submit(carsFetchTask)

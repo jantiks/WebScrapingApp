@@ -138,18 +138,21 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
          checks if existing database has the values , if not the method saves them
          */
         var carsData = [CarsData]()
+        let searchDatas = loadSavedData()
         
         // saving the Search reuslt
+        var carsPos:Int16 = 0
         for car in Cars {
             let carData = CarsData(context: self.container.viewContext)
             carData.phoneNumber = car.phoneNumber
             carData.price = car.price
             carData.title = car.title
+            carData.position = carsPos
             carsData.append(carData)
+            
+            carsPos += 1
         }
-        
-        let searchDatas = loadSavedData()
-        
+            
         
         for model in searchDatas {
             /*
@@ -157,7 +160,7 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
              */
             
             if (model.brand == brandValue) && (model.model == modelValue) && (model.zipCode == zipCode) {
-                model.result = NSSet(array: carsData)
+                model.result = NSSet(array: carsData) // update result if search has already done before
                 return
             }
         }

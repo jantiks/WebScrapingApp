@@ -19,6 +19,8 @@ extension CarsData {
     @NSManaged public var phoneNumber: String
     @NSManaged public var price: String
     @NSManaged public var title: String
+    @NSManaged public var position: Int16
+
     @NSManaged public var searchData: SearchData?
 
 }
