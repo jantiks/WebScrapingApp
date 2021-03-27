@@ -4,13 +4,13 @@
         <attribute name="phoneNumber" optional="YES" attributeType="String"/>
         <attribute name="price" optional="YES" attributeType="String"/>
         <attribute name="title" optional="YES" attributeType="String"/>
-        <relationship name="searchData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SearchData" inverseName="cars" inverseEntity="SearchData"/>
+        <relationship name="searchData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SearchData" inverseName="result" inverseEntity="SearchData"/>
     </entity>
     <entity name="SearchData" representedClassName="SearchData" syncable="YES">
         <attribute name="brand" optional="YES" attributeType="String"/>
         <attribute name="model" optional="YES" attributeType="String"/>
         <attribute name="zipCode" optional="YES" attributeType="String"/>
-        <relationship name="cars" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CarsData" inverseName="searchData" inverseEntity="CarsData"/>
+        <relationship name="result" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CarsData" inverseName="searchData" inverseEntity="CarsData"/>
     </entity>
     <elements>
         <element name="CarsData" positionX="216.32421875" positionY="1.32421875" width="128" height="103"/>

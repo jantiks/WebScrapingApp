@@ -17,7 +17,8 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     // instance variables
     public static var container: NSPersistentContainer!
-    private var Cars = [SearchData]()
+    private var SearchDatas = [SearchData]()
+    private var Cars = [CarsData]()
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,7 +51,7 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         /*
           returns the number of rows in tableview section
          */
-        return Cars.count
+        return SearchDatas.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -60,8 +61,8 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") else { fatalError("couldn't load tableview cell") }
         cell.configureCellUI()
-        cell.textLabel?.text = Cars[indexPath.row].brand
-        cell.detailTextLabel?.text = "\(Cars[indexPath.row].model)  |  ZipCode - \(Cars[indexPath.row].zipCode)"
+        cell.textLabel?.text = SearchDatas[indexPath.row].brand
+        cell.detailTextLabel?.text = "\(SearchDatas[indexPath.row].model)  |  ZipCode - \(SearchDatas[indexPath.row].zipCode)"
         return cell
     }
     
@@ -70,9 +71,10 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
          when user taps on tableview row , viewcontroller oppens the ResultsVC
          */
         guard let vc = storyboard?.instantiateViewController(withIdentifier: UtilsGeneral.SBID_ResultsVC) as? ResultsVC else { return }
-        vc.brandValue = Cars[indexPath.row].brand
-        vc.modelValue = Cars[indexPath.row].model
-        vc.zipCode = Cars[indexPath.row].zipCode
+        vc.brandValue = SearchDatas[indexPath.row].brand
+        vc.modelValue = SearchDatas[indexPath.row].model
+        vc.zipCode = SearchDatas[indexPath.row].zipCode
+        print(SearchDatas[indexPath.row].result?.count ?? "")
         
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -89,8 +91,8 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         if editingStyle == .delete {
             
             // deleting the data from Core Data store
-            StartVC.container.viewContext.delete(Cars[indexPath.row])
-            Cars.remove(at: indexPath.row)
+            StartVC.container.viewContext.delete(SearchDatas[indexPath.row])
+            SearchDatas.remove(at: indexPath.row)
             
             tableView.deleteRows(at: [indexPath], with: .automatic) // deleting row
             
@@ -147,14 +149,19 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
          loads the data from Core Data NSPersistentStore
          */
         
-        let request: NSFetchRequest<SearchData> = SearchData.fetchRequest()
-        let sort = NSSortDescriptor(key: "brand", ascending: true)
+        let searchRequest: NSFetchRequest<SearchData> = SearchData.fetchRequest()
+        let searchSort = NSSortDescriptor(key: "brand", ascending: true)
         
-        request.sortDescriptors = [sort]
+        searchRequest.sortDescriptors = [searchSort]
+        
+//        let resultSort = NSSortDescriptor(key: "", ascending: true)
+        
+        
         
         do {
-            Cars = try StartVC.container.viewContext.fetch(request)
-            print("got \(Cars.count) datas")
+            SearchDatas = try StartVC.container.viewContext.fetch(searchRequest)
+            print("got \(SearchDatas.count) datas")
+            print("got \(Cars.count), cars")
         } catch  {
             print("error")
         }

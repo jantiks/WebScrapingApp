@@ -23,7 +23,6 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
         
     private var Cars = [Car]()
-    private var SearchDatas = [SearchData]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -105,29 +104,32 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         searchData.brand = brandValue
         searchData.model = modelValue
         searchData.zipCode = zipCode
-        searchData.cars = carsData
-        
-        
-        
+        searchData.result = carsData
+        print("this is count \(searchData.result?.count)")
         
     }
     
-    private func loadSavedData() {
+    private func loadSavedData() -> [SearchData] {
         /*
          loads the data from Core Data NSPersistentStore
+         @return array of
          */
+        var searchDatas = [SearchData]()
         
         let request: NSFetchRequest<SearchData> = SearchData.fetchRequest()
         let sort = NSSortDescriptor(key: "brand", ascending: false)
         
         request.sortDescriptors = [sort]
         
+        
         do {
-            SearchDatas = try container.viewContext.fetch(request)
+            searchDatas = try container.viewContext.fetch(request)
+            
         } catch  {
             print("error")
         }
         
+        return searchDatas
 
     }
     
@@ -135,22 +137,9 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         /*
          checks if existing database has the values , if not the method saves them
          */
-        loadSavedData()
-        
-        
-        for model in SearchDatas {
-            /*
-             checking if data already exists then return
-             */
-            if (model.brand == brandValue) && (model.model == modelValue) && (model.zipCode == zipCode) {
-                return
-            }
-        }
-        
-        let searchData = SearchData(context: (self.container.viewContext))
         var carsData = [CarsData]()
         
-        // saving the cars
+        // saving the Search reuslt
         for car in Cars {
             let carData = CarsData(context: self.container.viewContext)
             carData.phoneNumber = car.phoneNumber
@@ -158,6 +147,23 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             carData.title = car.title
             carsData.append(carData)
         }
+        
+        let searchDatas = loadSavedData()
+        
+        
+        for model in searchDatas {
+            /*
+             checking if data already exists then return
+             */
+            
+            if (model.brand == brandValue) && (model.model == modelValue) && (model.zipCode == zipCode) {
+                model.result = NSSet(array: carsData)
+                return
+            }
+        }
+        
+        let searchData = SearchData(context: (self.container.viewContext))
+        
         
         self.configure(searchData: searchData, carsData: NSSet(array: carsData))
 
