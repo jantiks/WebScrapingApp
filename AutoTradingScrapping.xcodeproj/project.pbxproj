@@ -24,6 +24,7 @@
 		98AB43FF260EEB7800691A7F /* SearchData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AB43FB260EEB7800691A7F /* SearchData+CoreDataProperties.swift */; };
 		98AB4400260EEB7800691A7F /* CarsData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AB43FC260EEB7800691A7F /* CarsData+CoreDataClass.swift */; };
 		98AB4401260EEB7800691A7F /* CarsData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AB43FD260EEB7800691A7F /* CarsData+CoreDataProperties.swift */; };
+		98AB4404260F7BCE00691A7F /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98AB4403260F7BCE00691A7F /* DataManager.swift */; };
 		98BCB6E225FA6EEB0035B6F5 /* Car.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BCB6E125FA6EEB0035B6F5 /* Car.swift */; };
 		98CF2C7125F8E83700C04D65 /* StartVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CF2C7025F8E83700C04D65 /* StartVC.swift */; };
 		98CF2C7425F8EB1E00C04D65 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CF2C7325F8EB1E00C04D65 /* Extensions.swift */; };
@@ -52,6 +53,7 @@
 		98AB43FB260EEB7800691A7F /* SearchData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SearchData+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		98AB43FC260EEB7800691A7F /* CarsData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CarsData+CoreDataClass.swift"; sourceTree = "<group>"; };
 		98AB43FD260EEB7800691A7F /* CarsData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CarsData+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		98AB4403260F7BCE00691A7F /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		98BCB6E125FA6EEB0035B6F5 /* Car.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Car.swift; sourceTree = "<group>"; };
 		98CF2C7025F8E83700C04D65 /* StartVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartVC.swift; sourceTree = "<group>"; };
 		98CF2C7325F8EB1E00C04D65 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -174,6 +176,7 @@
 				98AB43FB260EEB7800691A7F /* SearchData+CoreDataProperties.swift */,
 				98AB43FC260EEB7800691A7F /* CarsData+CoreDataClass.swift */,
 				98AB43FD260EEB7800691A7F /* CarsData+CoreDataProperties.swift */,
+				98AB4403260F7BCE00691A7F /* DataManager.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -326,6 +329,7 @@
 				98867ECB25F7EBD600A447B1 /* SceneDelegate.swift in Sources */,
 				9896220025F90A6D006EC3F2 /* BrandsVC.swift in Sources */,
 				9882C405260A0BB70066DA0C /* SearchParams.swift in Sources */,
+				98AB4404260F7BCE00691A7F /* DataManager.swift in Sources */,
 				989621F925F90280006EC3F2 /* UtilsGeneral.swift in Sources */,
 				98AB43FE260EEB7800691A7F /* SearchData+CoreDataClass.swift in Sources */,
 				98AB43FF260EEB7800691A7F /* SearchData+CoreDataProperties.swift in Sources */,

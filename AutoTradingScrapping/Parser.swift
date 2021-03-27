@@ -65,7 +65,6 @@ struct Parser {
              headless browser opens the web page and loads the html
             */
             
-            
             do {
                 guard let innerHTML = doc?.innerHTML else { return } // making string from html
                 let htmlBody = try SwiftSoup.parse((innerHTML)) // parsing html string

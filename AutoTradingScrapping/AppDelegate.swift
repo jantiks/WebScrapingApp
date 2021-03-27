@@ -13,8 +13,6 @@ import BackgroundTasks
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        regisetLocal()
-        scheduleLocal()
         scheduleBGTasks()
         return true
     }
@@ -54,7 +52,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            Parser.invalidateParser()
         }
         
-//        task.setTaskCompleted(success: <#T##Bool#>)
+        
+        regisetLocal()
+//        scheduleLocal(title: <#String#>, phoneNumber: <#String#>, price: <#String#>)
+        
         // code to be here
         
     }
@@ -91,7 +92,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
-    private func scheduleLocal() {
+    private func scheduleLocal(title: String, phoneNumber: String, price: String ) {
         /*
          schedules local notifications
          */
@@ -99,8 +100,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let center = UNUserNotificationCenter.current()
         
         let content = UNMutableNotificationContent()
-        content.title = "Testing title"
-        content.body = "Du txa es tiko"
+        content.title = title
+        content.body = "\(phoneNumber)   \(price)"
         print("passed")
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 20, repeats: false)
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)

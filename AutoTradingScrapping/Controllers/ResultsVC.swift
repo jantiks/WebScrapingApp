@@ -14,6 +14,7 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     // instance variables
     private var container: NSPersistentContainer!
+    private var dataManager: DataManager? = nil
     
     var brandValue = ""
     var modelValue = ""
@@ -27,7 +28,8 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Core Data Containter
-        makeContainer()
+//        dataManager.makeContainer()
+        
         
     }
     
@@ -38,7 +40,9 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     override func loadView() {
         super.loadView()
-        makeContainer()
+//        makeContainer()
+        let params = SearchParams(brand: brandValue, model: modelValue, zipCode: zipCode, startYear: startYear, endYear: endYear, page: 0)
+        dataManager = DataManager(params: params)
         parseData()
 
     }
@@ -64,112 +68,6 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         cell.detailTextLabel?.text = "phone number - \(car.phoneNumber)   price - \(car.price)$"
         
         return cell
-    }
-    
-    //MARK: Core Data
-    
-    private func makeContainer() {
-        /*
-         makes the NSPersistentContainer
-         */
-        
-        container = NSPersistentContainer(name: "Model")
-        container.loadPersistentStores { storeDescription, error in
-            if let error = error {
-                print("Unresolved error \(error)")
-            }
-        }
-    }
-    
-    
-    private func saveContext() {
-        /*
-         this function saves the data to the disk
-         */
-        
-        if container.viewContext.hasChanges {
-            do {
-                try container.viewContext.save()
-            } catch  {
-                print("An error occurred while saving: \(error)")
-            }
-        }
-    }
-    
-    private func configure(searchData: SearchData, carsData: NSSet) {
-        /*
-         this function saves the data to CoreData model
-         */
-        // saving the search data
-        searchData.brand = brandValue
-        searchData.model = modelValue
-        searchData.zipCode = zipCode
-        searchData.result = carsData
-        print("this is count \(searchData.result?.count)")
-        
-    }
-    
-    private func loadSavedData() -> [SearchData] {
-        /*
-         loads the data from Core Data NSPersistentStore
-         @return array of
-         */
-        var searchDatas = [SearchData]()
-        
-        let request: NSFetchRequest<SearchData> = SearchData.fetchRequest()
-        let sort = NSSortDescriptor(key: "brand", ascending: false)
-        
-        request.sortDescriptors = [sort]
-        
-        
-        do {
-            searchDatas = try container.viewContext.fetch(request)
-            
-        } catch  {
-            print("error")
-        }
-        
-        return searchDatas
-
-    }
-    
-    private func saveDataToContainer() {
-        /*
-         checks if existing database has the values , if not the method saves them
-         */
-        var carsData = [CarsData]()
-        let searchDatas = loadSavedData()
-        
-        // saving the Search reuslt
-        var carsPos:Int16 = 0
-        for car in Cars {
-            let carData = CarsData(context: self.container.viewContext)
-            carData.phoneNumber = car.phoneNumber
-            carData.price = car.price
-            carData.title = car.title
-            carData.position = carsPos
-            carsData.append(carData)
-            
-            carsPos += 1
-        }
-            
-        
-        for model in searchDatas {
-            /*
-             checking if data already exists then return
-             */
-            
-            if (model.brand == brandValue) && (model.model == modelValue) && (model.zipCode == zipCode) {
-                model.result = NSSet(array: carsData) // update result if search has already done before
-                return
-            }
-        }
-        
-        let searchData = SearchData(context: (self.container.viewContext))
-        
-        
-        self.configure(searchData: searchData, carsData: NSSet(array: carsData))
-
     }
     
     //MARK: Parsing the data
@@ -237,12 +135,13 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                                             // page 4
                                             let parser4 = Parser(params: params4)
                                             parser4.parseData { [weak self] result in
+                                        
                                                 switch result {
                                                 case .success(let parsedCars4):
                                                     self?.Cars += parsedCars4
                                                     
                                                     // saving the data
-                                                    self?.saveDataToContainer()
+                                                    self?.dataManager?.saveDataToContainer(cars: self!.Cars)
                                                     
                                                     // removing loading view from superview when the parsing is done
                                                     loadView.removeFromSuperview()
@@ -261,7 +160,7 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                                                     self?.showFailAlert()
                                                 }
                                                 // saving the data if it is changed
-                                                self?.saveContext()
+                                                self?.dataManager?.saveContext()
                                             }
                                         case .failure(let error):
                                             print(error.localizedDescription)
