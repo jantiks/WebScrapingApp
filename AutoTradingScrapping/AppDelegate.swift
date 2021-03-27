@@ -54,6 +54,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            Parser.invalidateParser()
         }
         // code to be here
+        
     }
     
     func scheduleBGCarsFetch() {

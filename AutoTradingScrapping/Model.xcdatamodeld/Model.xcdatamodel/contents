@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="19H2" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="CarsData" representedClassName="CarsData" syncable="YES">
+        <attribute name="phoneNumber" optional="YES" attributeType="String"/>
+        <attribute name="price" optional="YES" attributeType="String"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <relationship name="searchData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SearchData" inverseName="cars" inverseEntity="SearchData"/>
+    </entity>
     <entity name="SearchData" representedClassName="SearchData" syncable="YES">
         <attribute name="brand" optional="YES" attributeType="String"/>
         <attribute name="model" optional="YES" attributeType="String"/>
         <attribute name="zipCode" optional="YES" attributeType="String"/>
+        <relationship name="cars" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CarsData" inverseName="searchData" inverseEntity="CarsData"/>
     </entity>
     <elements>
-        <element name="SearchData" positionX="-54" positionY="-9" width="128" height="88"/>
+        <element name="CarsData" positionX="216.32421875" positionY="1.32421875" width="128" height="103"/>
+        <element name="SearchData" positionX="-54" positionY="-9" width="128" height="103"/>
     </elements>
 </model>

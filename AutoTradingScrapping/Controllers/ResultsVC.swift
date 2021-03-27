@@ -97,13 +97,18 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    private func configure(searchData: SearchData) {
+    private func configure(searchData: SearchData, carsData: NSSet) {
         /*
          this function saves the data to CoreData model
          */
+        // saving the search data
         searchData.brand = brandValue
         searchData.model = modelValue
         searchData.zipCode = zipCode
+        searchData.cars = carsData
+        
+        
+        
         
     }
     
@@ -143,7 +148,18 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
         
         let searchData = SearchData(context: (self.container.viewContext))
-        self.configure(searchData: searchData)
+        var carsData = [CarsData]()
+        
+        // saving the cars
+        for car in Cars {
+            let carData = CarsData(context: self.container.viewContext)
+            carData.phoneNumber = car.phoneNumber
+            carData.price = car.price
+            carData.title = car.title
+            carsData.append(carData)
+        }
+        
+        self.configure(searchData: searchData, carsData: NSSet(array: carsData))
 
     }
     
