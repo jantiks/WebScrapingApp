@@ -56,28 +56,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         dataManager = DataManager()
         guard let searchDatas = dataManager?.loadSavedData() else { return }
-        let searchData = searchDatas[0]
+        guard let searchData = searchDatas.randomElement() else { return }
         let params = SearchParams(brand: searchData.brand, model: searchData.model, zipCode: searchData.zipCode, startYear: searchData.startYear, endYear: searchData.endYear, page: 0)
         
         // parsing the data
-        guard let result = searchData.result?.filter else { return }
+        
         let parser = Parser(params: params)
         parser.parseData { [weak self] result in
             print("is parsing in bg")
+            guard let superSelf = self else { return }
             switch result {
-            case.success(let Cars):
-                for parsedCar in Cars {
-//                    for car in result {
-                        if true {
-                            print("you should see the notification")
+            case.success(let parsedCars):
+                let result = superSelf.getResult(searchData)
+
+                // checking if the new parsed data has changes
+                for parsedCar in parsedCars {
+                    for car in result {
+                        if (parsedCar.phoneNumber == car.phoneNumber) &&
+                            (parsedCar.price == car.price) &&
+                            (parsedCar.title == car.price) {
+                            // if no change continue
+                            continue
+
+                        } else {
+                            // if are changes make local notifications
                             self?.regisetLocal()
                             self?.scheduleLocal(title: parsedCar.title, phoneNumber: parsedCar.phoneNumber, price: parsedCar.price)
                             task.setTaskCompleted(success: true)
-
                         }
-//                    }
+                    }
                 }
-            case.failure( _):
+            case.failure(_):
                 print("error")
                 task.setTaskCompleted(success: false)
                 
@@ -104,6 +113,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } catch  {
             print("unable to submit task \(error.localizedDescription)")
         }
+    }
+    
+    private func getResult(_ searchData: SearchData) -> [Car] {
+        /*
+         changeing the CarsData array to Car array
+         @parameters searchData
+         @return [Car]
+         */
+        guard var result = searchData.result?.allObjects as? [CarsData] else { fatalError() }
+        result = result.sorted {
+            return $0.position < $1.position
+        }
+        var returnResult = [Car]()
+        
+        for res in result {
+            let car = Car(title: res.title, price: res.price, phoneNumber: res.phoneNumber)
+            returnResult.append(car)
+        }
+        
+        return returnResult
+        
     }
     
     // MARK: UserNotifications
