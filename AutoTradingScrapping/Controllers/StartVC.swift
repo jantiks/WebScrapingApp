@@ -92,7 +92,7 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         if editingStyle == .delete {
             
             // deleting the data from Core Data store
-            StartVC.container.viewContext.delete(SearchDatas[indexPath.row])
+            dataManager?.deleteData(SearchDatas[indexPath.row])
             SearchDatas.remove(at: indexPath.row)
             
             tableView.deleteRows(at: [indexPath], with: .automatic) // deleting row

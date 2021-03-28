@@ -60,6 +60,10 @@ class DataManager {
         
     }
     
+    func deleteData(_ object: SearchData) {
+        container.viewContext.delete(object)
+    }
+    
     func loadSavedData() -> [SearchData] {
         /*
          loads the data from Core Data NSPersistentStore
