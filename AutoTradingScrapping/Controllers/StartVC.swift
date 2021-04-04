@@ -75,7 +75,6 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         vc.brandValue = SearchDatas[indexPath.row].brand
         vc.modelValue = SearchDatas[indexPath.row].model
         vc.zipCode = SearchDatas[indexPath.row].zipCode
-        print(SearchDatas[indexPath.row].result?.count ?? "")
         
         navigationController?.pushViewController(vc, animated: true)
     }

@@ -117,7 +117,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     private func getResult(_ searchData: SearchData) -> [Car] {
         /*
-         changeing the CarsData array to Car array
+         changing the CarsData array to Car array
          @parameters searchData
          @return [Car]
          */

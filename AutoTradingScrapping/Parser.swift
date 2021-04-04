@@ -24,7 +24,7 @@ struct Parser {
         if params.page == 0 {
             resourceStr = "https://www.autotrader.com/cars-for-sale/all-cars/\(params.brand)/\(params.model)/new-york-ny-\(params.zipCode)?dma=&searchRadius=0&isNewSearch=false&marketExtension=include&showAccelerateBanner=false&sortBy=relevance&numRecords=100"
         } else if params.page > 0 {
-            resourceStr = "https://www.autotrader.com/cars-for-sale/all-cars/\(params.brand)/\(params.model)/new-york-ny-\(params.zipCode)?dma=&searchRadius=25&isNewSearch=false&marketExtension=include&showAccelerateBanner=false&sortBy=relevance&numRecords=100&firstRecord=\(100 * params.page)"
+            resourceStr = "https://www.autotrader.com/cars-for-sale/all-cars/\(params.brand)/\(params.model)/new-york-ny-\(params.zipCode)?dma=&searchRadius=0&isNewSearch=false&marketExtension=include&showAccelerateBanner=false&sortBy=relevance&numRecords=100&firstRecord=\(100 * params.page)"
         }
         
         if !(params.startYear.isEmpty) {

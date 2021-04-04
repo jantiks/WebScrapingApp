@@ -88,7 +88,7 @@ class DataManager {
 
     }
     
-    func saveDataToContainer(cars: [Car]) {
+    func saveDataToContainer(cars: [Car]) -> [Car]? {
         /*
          checks if existing database has the values , if not the method saves them
          */
@@ -113,23 +113,49 @@ class DataManager {
             /*
              checking if data already exists then return
              */
-            guard let params = parameters else { return }
+            if let params = parameters  {
+                if (model.brand == params.brand) &&
+                    (model.model == params.model) &&
+                    (model.zipCode == params.zipCode) &&
+                    (model.startYear == params.startYear) &&
+                    (model.endYear == params.endYear) {
+                    
+                    let oldResult = getResult(model)
+                    model.result = NSSet(array: carsData) // update result if search has already done before
+                    return oldResult
+                }
+            }
 
             
-            if (model.brand == params.brand) &&
-                (model.model == params.model) &&
-                (model.zipCode == params.zipCode) &&
-                (model.startYear == params.startYear) &&
-                (model.endYear == params.endYear) {
-                model.result = NSSet(array: carsData) // update result if search has already done before
-                return
-            }
+            
         }
         
         let searchData = SearchData(context: (self.container.viewContext))
         
         
         self.configure(searchData: searchData, carsData: NSSet(array: carsData))
+        return nil
 
+    }
+    
+    private func getResult(_ searchData: SearchData) -> [Car] {
+        /*
+         changing the CarsData array to Car array
+         @parameters searchData
+         @return [Car]
+         */
+        guard var result = searchData.result?.allObjects as? [CarsData] else { fatalError() }
+        result = result.sorted {
+            return $0.position < $1.position
+        }
+        var returnResult = [Car]()
+        
+        for res in result {
+            let car = Car(title: res.title, price: res.price, phoneNumber: res.phoneNumber)
+            returnResult.append(car)
+        }
+        
+        return returnResult
+        
     }
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Car {
+struct Car: Equatable {
     
     let title: String
     let price: String

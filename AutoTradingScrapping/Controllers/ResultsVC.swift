@@ -24,6 +24,7 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
         
     private var Cars = [Car]()
+    private var oldResults: [Car]? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,6 +64,18 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") else { fatalError("couldn't load the cell") }
         
         let car = Cars[indexPath.row]
+        if let oldResults = oldResults {
+            /*
+             the old results have black color, the new ones red
+             */
+            if oldResults.contains(car) {
+                cell.textLabel?.textColor = .black
+            } else {
+                cell.textLabel?.textColor = .red
+            }
+        } else {
+            cell.textLabel?.textColor = .red
+        }
         
         cell.textLabel?.text = car.title
         cell.textLabel?.font = cell.textLabel?.font.withSize(12)
@@ -141,8 +154,10 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                                                 case .success(let parsedCars4):
                                                     self?.Cars += parsedCars4
                                                     
-                                                    // saving the data
-                                                    self?.dataManager?.saveDataToContainer(cars: self!.Cars)
+                                                    /*
+                                                     saving the data, if it has old values , the oldResults will get them
+                                                     */
+                                                    self?.oldResults = self?.dataManager?.saveDataToContainer(cars: self!.Cars)
                                                     
                                                     // removing loading view from superview when the parsing is done
                                                     loadView.removeFromSuperview()
