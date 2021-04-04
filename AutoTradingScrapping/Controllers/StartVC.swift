@@ -63,7 +63,7 @@ class StartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") else { fatalError("couldn't load tableview cell") }
         cell.configureCellUI()
         cell.textLabel?.text = SearchDatas[indexPath.row].brand
-        cell.detailTextLabel?.text = "\(SearchDatas[indexPath.row].model)  |  ZipCode - \(SearchDatas[indexPath.row].zipCode)"
+        cell.detailTextLabel?.text = "\(SearchDatas[indexPath.row].model)"
         return cell
     }
     

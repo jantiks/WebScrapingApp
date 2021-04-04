@@ -130,21 +130,21 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                     parser1.parseData { [weak self] result in
                         switch result {
                         case .success(let parsedCars1):
-                            self?.Cars += parsedCars1
+                            self?.Cars.append(contentsOf: parsedCars1)
                             
                             // page 2
                             let parser2 = Parser(params: params2)
                             parser2.parseData { [weak self] result in
                                 switch result {
                                 case .success(let parsedCars2):
-                                    self?.Cars += parsedCars2
+                                    self?.Cars.append(contentsOf: parsedCars2)
                                     
                                     // page 3
                                     let parser3 = Parser(params: params3)
                                     parser3.parseData { [weak self] result in
                                         switch result {
                                         case .success(let parsedCars3):
-                                            self?.Cars += parsedCars3
+                                            self?.Cars.append(contentsOf: parsedCars3)
                                             
                                             // page 4
                                             let parser4 = Parser(params: params4)
@@ -152,7 +152,7 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                                         
                                                 switch result {
                                                 case .success(let parsedCars4):
-                                                    self?.Cars += parsedCars4
+                                                    self?.Cars.append(contentsOf: parsedCars4)
                                                     
                                                     /*
                                                      saving the data, if it has old values , the oldResults will get them
