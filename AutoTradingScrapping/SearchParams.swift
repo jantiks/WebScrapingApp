@@ -13,5 +13,6 @@ struct SearchParams {
     let zipCode: String
     let startYear: String
     let endYear: String
+    let time: Int
     let page: Int
 }

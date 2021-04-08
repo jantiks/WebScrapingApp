@@ -21,6 +21,7 @@ extension CarsData {
     @NSManaged public var title: String
     @NSManaged public var position: Int16
 
+
     @NSManaged public var searchData: SearchData?
 
 }

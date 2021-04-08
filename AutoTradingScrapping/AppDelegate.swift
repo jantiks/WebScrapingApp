@@ -10,12 +10,13 @@ import UserNotifications
 import BackgroundTasks
 
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
     var dataManager: DataManager? = nil
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         scheduleBGTasks()
+        
         return true
     }
 
@@ -57,7 +58,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         dataManager = DataManager()
         guard let searchDatas = dataManager?.loadSavedData() else { return }
         guard let searchData = searchDatas.randomElement() else { return }
-        let params = SearchParams(brand: searchData.brand, model: searchData.model, zipCode: searchData.zipCode, startYear: searchData.startYear, endYear: searchData.endYear, page: 0)
+        let params = SearchParams(brand: searchData.brand, model: searchData.model, zipCode: searchData.zipCode, startYear: searchData.startYear, endYear: searchData.endYear, time: 180, page: 0)
         
         // parsing the data
         
@@ -94,8 +95,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
         }
         
-
-        
         scheduleBGTasks()
 
     }
@@ -104,10 +103,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         /*
          scheduleing the background task
          */
-        
+
         let carsFetchTask = BGAppRefreshTaskRequest(identifier: "com.jantiks.fetchCars")
         carsFetchTask.earliestBeginDate = Date(timeIntervalSinceNow: 30)
-        
+
         do {
             try BGTaskScheduler.shared.submit(carsFetchTask)
         } catch  {
@@ -137,7 +136,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     // MARK: UserNotifications
-    private func regisetLocal() {
+    func regisetLocal() {
         /*
          registers local notification , asks user for permissions.
          */
@@ -153,7 +152,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
-    private func scheduleLocal(title: String, phoneNumber: String, price: String ) {
+    func scheduleLocal(title: String, phoneNumber: String, price: String ) {
         /*
          schedules local notifications
          */
@@ -169,6 +168,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         center.add(request)
     }
-
+    
+    //    Handle Notification Center Delegate methods
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification,
+                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.banner, .sound])
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
+        if response.notification.request.identifier == "Local Notification" {
+            print("Handling notifications with the Local Notification Identifier")
+        }
+        completionHandler()
+    }
 }
 

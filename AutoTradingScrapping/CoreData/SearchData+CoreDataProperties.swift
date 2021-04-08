@@ -21,6 +21,7 @@ extension SearchData {
     @NSManaged public var zipCode: String
     @NSManaged public var startYear: String
     @NSManaged public var endYear: String
+    @NSManaged public var timer: Int16
 
     @NSManaged public var result: NSSet?
 

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class UtilsGeneral {
     
@@ -13,7 +14,8 @@ class UtilsGeneral {
     static let SBID_BrandsVC = "Brands"
     static let SBID_ResultsVC = "Results"
     static let SBID_ModelsVC = "Models"
-    
+    static var rescrapingTime = 180
+    private let timer = Timer()
     
     // Brands and models data
     static let brands = [["label":"Acura","value":"ACURA", "models":
@@ -198,6 +200,73 @@ class UtilsGeneral {
                             // models
                             ["V60": "VOLVOV60", "XC90": "XC90", "S90": "S90", "S60": "S60", "XC60": "XC60", "XC40": "VOLVOXC40", "V90": "V90", "XC70": "XC"]],]
     
+    
+    func rescrap(params: SearchParams) {
+        /*
+         rescrapes data after every period user sets
+         */
+        
+        // parsing the data
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        appDelegate?.regisetLocal()
+        appDelegate?.scheduleLocal(title: "Du shat la txa es", phoneNumber: "099838882", price: "123")
+//        let parser = Parser(params: params)
+//        parser.parseData { [weak self] result in
+//            print("is parsing in bg")
+//            guard let superSelf = self else { return }
+//            switch result {
+//            case.success(let parsedCars):
+//                let result = superSelf.getResult(searchData)
+//
+//                // checking if the new parsed data has changes
+//                for parsedCar in parsedCars {
+//                    for car in result {
+//                        if (parsedCar.phoneNumber == car.phoneNumber) &&
+//                            (parsedCar.price == car.price) &&
+//                            (parsedCar.title == car.price) {
+//                            // if no change continue
+//                            continue
+//
+//                        } else {
+//                            print("comparing")
+//                            // if are changes make local notifications
+//                            let appDelegate = UIApplication.shared.delegate as? AppDelegate
+//                            appDelegate?.regisetLocal()
+//                            appDelegate?.scheduleLocal(title: parsedCar.title, phoneNumber: parsedCar.phoneNumber, price: parsedCar.price)
+//                        }
+//                    }
+//                }
+//            case.failure(_):
+//                print("error")
+//            }
+//
+//        }
+//
+
+    }
+    
+    private func getResult(_ searchData: SearchData) -> [Car] {
+        /*
+         changing the CarsData array to Car array
+         @parameters searchData
+         @return [Car]
+         */
+        guard var result = searchData.result?.allObjects as? [CarsData] else { fatalError() }
+        result = result.sorted {
+            return $0.position < $1.position
+        }
+        var returnResult = [Car]()
+        
+        for res in result {
+            let car = Car(title: res.title, price: res.price, phoneNumber: res.phoneNumber)
+            returnResult.append(car)
+        }
+        
+        return returnResult
+        
+    }
+    
+   
 }
 
 

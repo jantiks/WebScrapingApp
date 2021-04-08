@@ -7,14 +7,15 @@
 
 import UIKit
 import CoreData
+import UserNotifications
 import WebKit
 
-class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UNUserNotificationCenterDelegate {
     @IBOutlet weak var tableView: UITableView!
     
     // instance variables
-    private var container: NSPersistentContainer!
     private var dataManager: DataManager? = nil
+    private var timer = Timer()
     
     var brandValue = ""
     var modelValue = ""
@@ -28,8 +29,7 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Core Data Containter
-//        dataManager.makeContainer()
+        setupNavBar()
         
         
     }
@@ -41,8 +41,7 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     override func loadView() {
         super.loadView()
-//        makeContainer()
-        let params = SearchParams(brand: brandValue, model: modelValue, zipCode: zipCode, startYear: startYear, endYear: endYear, page: 0)
+        let params = SearchParams(brand: brandValue, model: modelValue, zipCode: zipCode, startYear: startYear, endYear: endYear, time: 180, page: 0)
         dataManager = DataManager()
         dataManager?.setParams(params: params) // passing parameter
         parseData()
@@ -92,6 +91,19 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
          */
         
         
+        let loadView = createLoadView()
+        
+        // making the parsing
+        parse(loadView: loadView)
+                
+    }
+    
+    private func createLoadView() -> UIView {
+        /*
+         creates loadview and adds to main view
+         @return loadview
+         */
+        
         // making the load view
         let loadView = UIView()
         let label = UILabel(frame: CGRect(x: 30, y: 55, width: 70, height: 20))
@@ -109,116 +121,119 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         loadView.addSubview(label)
         self.view.addSubview(loadView)
         
+        return loadView
+    }
     
+    private func parse(loadView: UIView?) {
+        // making the parameters for each page
+        let params = SearchParams(brand: brandValue, model: modelValue, zipCode: zipCode, startYear: startYear, endYear: endYear, time: 180, page: 0)
+        let params1 = SearchParams(brand: brandValue, model: modelValue, zipCode: zipCode, startYear: startYear, endYear: endYear, time: 180, page: 1)
+        let params2 = SearchParams(brand: brandValue, model: modelValue, zipCode: zipCode, startYear: startYear, endYear: endYear, time: 180, page: 2)
+        let params3 = SearchParams(brand: brandValue, model: modelValue, zipCode: zipCode, startYear: startYear, endYear: endYear, time: 180, page: 3)
+        let params4 = SearchParams(brand: brandValue, model: modelValue, zipCode: zipCode, startYear: startYear, endYear: endYear, time: 180, page: 4)
         
-            // making the parameters for each page
-            let params = SearchParams(brand: brandValue, model: modelValue, zipCode: zipCode, startYear: startYear, endYear: endYear, page: 0)
-            let params1 = SearchParams(brand: brandValue, model: modelValue, zipCode: zipCode, startYear: startYear, endYear: endYear, page: 1)
-            let params2 = SearchParams(brand: brandValue, model: modelValue, zipCode: zipCode, startYear: startYear, endYear: endYear, page: 2)
-            let params3 = SearchParams(brand: brandValue, model: modelValue, zipCode: zipCode, startYear: startYear, endYear: endYear, page: 3)
-            let params4 = SearchParams(brand: brandValue, model: modelValue, zipCode: zipCode, startYear: startYear, endYear: endYear, page: 4)
-    
         
-            let parser = Parser(params: params)
-            parser.parseData { [weak self] result in
-                switch result {
-                case .success(let parsedCars):
-                    self?.Cars += parsedCars
-                    
-                    // page 1
-                    let parser1 = Parser(params: params1)
-                    parser1.parseData { [weak self] result in
-                        switch result {
-                        case .success(let parsedCars1):
-                            self?.Cars.append(contentsOf: parsedCars1)
-                            
-                            // page 2
-                            let parser2 = Parser(params: params2)
-                            parser2.parseData { [weak self] result in
-                                switch result {
-                                case .success(let parsedCars2):
-                                    self?.Cars.append(contentsOf: parsedCars2)
-                                    
-                                    // page 3
-                                    let parser3 = Parser(params: params3)
-                                    parser3.parseData { [weak self] result in
-                                        switch result {
-                                        case .success(let parsedCars3):
-                                            self?.Cars.append(contentsOf: parsedCars3)
-                                            
-                                            // page 4
-                                            let parser4 = Parser(params: params4)
-                                            parser4.parseData { [weak self] result in
+        let parser = Parser(params: params)
+        parser.parseData { [weak self] result in
+            switch result {
+            case .success(let parsedCars):
+                self?.Cars += parsedCars
+                
+                // page 1
+                let parser1 = Parser(params: params1)
+                parser1.parseData { [weak self] result in
+                    switch result {
+                    case .success(let parsedCars1):
+                        self?.Cars.append(contentsOf: parsedCars1)
+                        
+                        // page 2
+                        let parser2 = Parser(params: params2)
+                        parser2.parseData { [weak self] result in
+                            switch result {
+                            case .success(let parsedCars2):
+                                self?.Cars.append(contentsOf: parsedCars2)
+                                
+                                // page 3
+                                let parser3 = Parser(params: params3)
+                                parser3.parseData { [weak self] result in
+                                    switch result {
+                                    case .success(let parsedCars3):
+                                        self?.Cars.append(contentsOf: parsedCars3)
                                         
-                                                switch result {
-                                                case .success(let parsedCars4):
-                                                    self?.Cars.append(contentsOf: parsedCars4)
-                                                    
-                                                    /*
-                                                     saving the data, if it has old values , the oldResults will get them
-                                                     */
-                                                    self?.oldResults = self?.dataManager?.saveDataToContainer(cars: self!.Cars)
-                                                    
-                                                    // removing loading view from superview when the parsing is done
-                                                    loadView.removeFromSuperview()
-                                                    
-                                                    let ac = UIAlertController(title: "Success", message: "Data has parsed successfuly", preferredStyle: .alert)
-                                                    ac.addAction(UIAlertAction(title: "OK", style: .cancel))
-                                                    
-                                                    self?.present(ac, animated: true)
-                                                    
-                                                    self?.tableView.reloadData()
-                                                case.failure(let error):
-                                                    print(error.localizedDescription)
-                                                    loadView.removeFromSuperview()
-                                                    
-                                                    // showning alert controller if the loading fails
-                                                    self?.showFailAlert()
-                                                }
-                                                // saving the data if it is changed
-                                                self?.dataManager?.saveContext()
+                                        // page 4
+                                        let parser4 = Parser(params: params4)
+                                        parser4.parseData { [weak self] result in
+                                            
+                                            switch result {
+                                            case .success(let parsedCars4):
+                                                self?.Cars.append(contentsOf: parsedCars4)
+                                                
+                                                /*
+                                                 saving the data, if it has old values , the oldResults will get them
+                                                 */
+                                                self?.oldResults = self?.dataManager?.saveDataToContainer(cars: self!.Cars)
+                                                
+                                                // removing loading view from superview when the parsing is done
+                                                loadView?.removeFromSuperview()
+                                                
+                                                let ac = UIAlertController(title: "Success", message: "Data has parsed successfuly", preferredStyle: .alert)
+                                                ac.addAction(UIAlertAction(title: "OK", style: .cancel))
+                                                
+                                                
+                                                self?.present(ac, animated: true)
+                                                self?.tableView.reloadData()
+                                                
+                                                self?.timer = Timer.scheduledTimer(timeInterval: TimeInterval(params.time), target: self, selector: #selector(self?.parseAgain), userInfo: nil, repeats: false)
+                                            case.failure(let error):
+                                                print(error.localizedDescription)
+                                                loadView?.removeFromSuperview()
+                                                
+                                                // showning alert controller if the loading fails
+                                                self?.showFailAlert()
                                             }
-                                        case .failure(let error):
-                                            print(error.localizedDescription)
-                                            loadView.removeFromSuperview()
-                                            
-                                            // showning alert controller if the loading fails
-                                            self?.showFailAlert()
+                                            // saving the data if it is changed
+                                            self?.dataManager?.saveContext()
                                         }
+                                    case .failure(let error):
+                                        print(error.localizedDescription)
+                                        loadView?.removeFromSuperview()
                                         
+                                        // showning alert controller if the loading fails
+                                        self?.showFailAlert()
                                     }
-                                case .failure(let error):
-                                    print(error.localizedDescription)
-                                    loadView.removeFromSuperview()
                                     
-                                    // showning alert controller if the loading fails
-                                    self?.showFailAlert()
                                 }
+                            case .failure(let error):
+                                print(error.localizedDescription)
+                                loadView?.removeFromSuperview()
                                 
-                                
+                                // showning alert controller if the loading fails
+                                self?.showFailAlert()
                             }
                             
                             
-                        case .failure(let error):
-                            print(error.localizedDescription)
-                            loadView.removeFromSuperview()
-                            
-                            // showning alert controller if the loading fails
-                            self?.showFailAlert()
                         }
+                        
+                        
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                        loadView?.removeFromSuperview()
+                        
+                        // showning alert controller if the loading fails
+                        self?.showFailAlert()
                     }
-                    
-                case .failure(let error):
-                    print(error.localizedDescription)
-                    loadView.removeFromSuperview()
-                    
-                    // showning alert controller if the loading fails
-                    self?.showFailAlert()
                 }
                 
+            case .failure(let error):
+                print(error.localizedDescription)
+                loadView?.removeFromSuperview()
                 
+                // showning alert controller if the loading fails
+                self?.showFailAlert()
             }
-                
+            
+            
+        }
     }
     
     private func showFailAlert() {
@@ -230,6 +245,48 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         ac.addAction(UIAlertAction(title: "OK", style: .cancel))
         
         self.present(ac, animated: true)
+    }
+    
+    private func setupNavBar() {
+        /*
+         makes the navigation bar buttons
+         */
+        
+        let rightBarButtonItem = UIBarButtonItem(title: "Scrap time", style: .plain, target: self, action: #selector(setTimer))
+        self.navigationItem.rightBarButtonItem = rightBarButtonItem
+    }
+    
+    @objc func parseAgain() {
+        print("starting parsing")
+        parse(loadView: nil)
+        print("parsed again")
+    }
+    
+    @objc func setTimer() {
+        /*
+        sets the rescraping timers time
+         */
+        let ac = UIAlertController(title: "parsing time", message: "Choose parsing time", preferredStyle: .actionSheet)
+        for i in 2...10 {
+            let time = i * 60
+            let action = UIAlertAction(title: "\(time)", style: .default) { (action) in
+                UtilsGeneral.rescrapingTime = time
+                let appDelegate = UIApplication.shared.delegate as? AppDelegate
+                appDelegate?.regisetLocal()
+                appDelegate?.scheduleLocal(title: "Du shat la txa es", phoneNumber: "099838882", price: "123")
+                
+            }
+            ac.addAction(action)
+        }
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel)
+        ac.addAction(cancel)
+        present(ac, animated: true)
+    }
+    
+    //MARK: UNNotificationCenterDelegate methods
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        
+        completionHandler([UNNotificationPresentationOptions.banner, .badge, .sound])
     }
     
 

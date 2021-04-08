@@ -54,6 +54,7 @@ class DataManager {
         searchData.zipCode = params.zipCode
         searchData.startYear = params.startYear
         searchData.endYear = params.endYear
+        searchData.timer = Int16(params.time)
         searchData.result = carsData
         
         print("this is count \(searchData.result?.count)")
