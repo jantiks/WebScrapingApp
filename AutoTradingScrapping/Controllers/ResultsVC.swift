@@ -67,7 +67,7 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             /*
              the old results have black color, the new ones red
              */
-            if oldResults.contains(car) {
+            if checkNewResult(oldResults, newCar: car) {
                 cell.textLabel?.textColor = .black
             } else {
                 cell.textLabel?.textColor = .red
@@ -135,39 +135,40 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         
         let parser = Parser(params: params)
         parser.parseData { [weak self] result in
+            var cars = [Car]()
             switch result {
             case .success(let parsedCars):
-                self?.Cars += parsedCars
+                cars += parsedCars
                 
                 // page 1
                 let parser1 = Parser(params: params1)
                 parser1.parseData { [weak self] result in
                     switch result {
                     case .success(let parsedCars1):
-                        self?.Cars.append(contentsOf: parsedCars1)
+                        cars += parsedCars1
                         
                         // page 2
                         let parser2 = Parser(params: params2)
                         parser2.parseData { [weak self] result in
                             switch result {
                             case .success(let parsedCars2):
-                                self?.Cars.append(contentsOf: parsedCars2)
-                                
+                                cars += parsedCars2
+
                                 // page 3
                                 let parser3 = Parser(params: params3)
                                 parser3.parseData { [weak self] result in
                                     switch result {
                                     case .success(let parsedCars3):
-                                        self?.Cars.append(contentsOf: parsedCars3)
-                                        
+                                        cars += parsedCars3
+
                                         // page 4
                                         let parser4 = Parser(params: params4)
                                         parser4.parseData { [weak self] result in
                                             
                                             switch result {
                                             case .success(let parsedCars4):
-                                                self?.Cars.append(contentsOf: parsedCars4)
-                                                
+                                                cars += parsedCars4
+                                                self?.Cars = cars
                                                 /*
                                                  saving the data, if it has old values , the oldResults will get them
                                                  */
@@ -183,7 +184,7 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
                                                 self?.present(ac, animated: true)
                                                 self?.tableView.reloadData()
                                                 
-                                                self?.timer = Timer.scheduledTimer(timeInterval: TimeInterval(params.time), target: self, selector: #selector(self?.parseAgain), userInfo: nil, repeats: false)
+                                                self?.timer = Timer.scheduledTimer(timeInterval: TimeInterval(10), target: self, selector: #selector(self?.parseAgain), userInfo: nil, repeats: false)
                                             case.failure(let error):
                                                 print(error.localizedDescription)
                                                 loadView?.removeFromSuperview()
@@ -234,6 +235,16 @@ class ResultsVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             
             
         }
+    }
+    
+    private func checkNewResult(_ oldCars: [Car], newCar: Car) -> Bool {
+        for car in oldCars {
+            if (car.phoneNumber == newCar.phoneNumber) && (car.price == car.price) && (car.title == car.title) {
+                return true
+            }
+        }
+        
+        return false
     }
     
     private func showFailAlert() {
